@@ -2,16 +2,25 @@
 SYS_CONF_SCRIPTS_DIR="vfs_config_scripts"
 SRC="/sources"
 
+function install_bootscripts ()
+{
+    cd $SRC
+    local TG=$(extract lfs-bootscripts-20191031.tar.xz )
+    cd $TG
+
+    make install
+
+    rm -rf $TG
+    cd $SRC
+}
+
 source /$SYS_CONF_SCRIPTS_DIR/utils.sh
+#----------------------------
+
 s_start $0
 S=$?
 
-cd $SRC
-TG=$(extract lfs-bootscripts-20191031.tar.xz )
-cd $TG
-make install
-cd $SRC
-rm -rf $TG
+run_cmd install_bootscripts
 
 s_end $0
 E=$?
