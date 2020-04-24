@@ -20,9 +20,8 @@ function create_resolvconf ()
 cat > /etc/resolv.conf << "EOF"
 # Begin /etc/resolv.conf
 
-#domain <Your Domain Name>
 nameserver 192.168.0.1
-#nameserver <IP address of your secondary nameserver>
+nameserver 8.8.8.8
 
 # End /etc/resolv.conf
 EOF
@@ -47,15 +46,21 @@ ff02::2 ip6-allrouters
 EOF
 }
 
+function create_udev_rules ()
+{
+    bash /lib/udev/init-net-rules.sh
+    #cat /etc/udev/rules.d/70-persistent-net.rules
+}
+
 source /$SYS_CONF_SCRIPTS_DIR/utils.sh
+#--------------------------------------------
 s_start $0
 S=$?
 
-run_cmd /lib/udev/init-net-rules.sh
-#cat /etc/udev/rules.d/70-persistent-net.rules
+run_cmd create_udev_rules
 run_cmd create_network_interface_conf_file
 run_cmd create_hostname_file
-run_cmd create_hosts_file
+run_cmd create_host_file
 run_cmd create_resolvconf
 
 s_end $0

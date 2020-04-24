@@ -61,13 +61,12 @@ LEGACY_CHARSET="iso-8859-15"
 FONT="LatArCyrHeb-16 -m 8859-15"
 
 # End /etc/sysconfig/console
-EOF    
+EOF
 }
 
 function create_rcsite_conf_file ()
 {
-    cd /etc/sysconfig
-    cat > rc.site << "EOF"
+cat > /etc/sysconfig/rc.site << "EOF"
 # rc.site
 # Optional parameters for boot scripts.
 
@@ -159,8 +158,7 @@ VERBOSE_FSCK=y
 #KEYMAP_CORRECTIONS="euro2"
 #FONT="lat0-16 -m 8859-15"
 #LEGACY_CHARSET=
-EOF 
-    cd -
+EOF
 }
 
 function create_profile_conf_file ()
@@ -235,8 +233,8 @@ cat > /etc/shells << "EOF"
 EOF
 }
 
-#--------------------------------------------
 source /$SYS_CONF_SCRIPTS_DIR/utils.sh
+#--------------------------------------------
 s_start $0
 S=$?
 
