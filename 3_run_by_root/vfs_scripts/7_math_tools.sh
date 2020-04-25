@@ -21,8 +21,8 @@ function install_gmp ()
     make install
     make install-html
 
-    cd $SRC
     rm -rf $TG
+    cd $SRC
 }
 
 function install_mpfr ()
@@ -42,8 +42,9 @@ function install_mpfr ()
     ERR=$?
     make install
     make install-html
-    cd $SRC
+
     rm -rf $TG
+    cd $SRC
     return $ERR
 }
 
@@ -63,8 +64,8 @@ function install_mpc ()
     make install
     make install-html
 
-    cd $SRC
     rm -rf $TG
+    cd $SRC
     return $ERR
 }
 

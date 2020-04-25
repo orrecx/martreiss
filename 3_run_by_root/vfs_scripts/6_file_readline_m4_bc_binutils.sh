@@ -26,8 +26,8 @@ function install_readline ()
     ln -sfv ../../lib/$(readlink /usr/lib/libhistory.so ) /usr/lib/libhistory.so
     install -v -m644 doc/*.{ps,pdf,html,dvi} /usr/share/doc/readline-8.0
 
-    cd $SRC
     rm -rf $TG
+    cd $SRC
 }
 
 function install_m4 ()
@@ -52,8 +52,8 @@ function install_bc ()
     make test
     make install
 
-    cd $SRC
     rm -rf $TG
+    cd $SRC
 }
 
 function install_binutils ()
@@ -84,8 +84,8 @@ function install_binutils ()
         ERR=1
     fi
 
-    cd $SRC
     rm -rf $TG
+    cd $SRC
     return $ERR
 }
 

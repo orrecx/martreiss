@@ -8,22 +8,29 @@ function build_and_install_kernel ()
     cd $SRC
     local TG=$(extract linux-5.5.3.tar.xz)
     cd $TG
-
+    exit 0
     make mrproper
 	make menuconfig
-    make
+    local ERR=$?
+    if [ $ERR -eq 0 ]; then
+        make
 
-    make modules_install
-    #copy build artifacts to /boot 
-    cp -iv arch/x86/boot/bzImage /boot/vmlinuz-5.5.3-lfs-9.1
-    cp -iv System.map /boot/System.map-5.5.3
-    cp -iv .config /boot/config-5.5.3
+        make modules_install
 
-    install -d /usr/share/doc/linux-5.5.3
-    cp -r Documentation/* /usr/share/doc/linux-5.5.3
+        #copy build artifacts to /boot 
+        cp -iv arch/x86/boot/bzImage /boot/vmlinuz-5.5.3-lfs-9.1
+        cp -iv System.map /boot/System.map-5.5.3
+        cp -iv .config /boot/config-5.5.3
 
-    rm -v -r $TG
+        install -d /usr/share/doc/linux-5.5.3
+        cp -r Documentation/* /usr/share/doc/linux-5.5.3
+    else
+        echo "[ERROR]: make menuconfig failed"
+    fi
+
+    rm -v -rf $TG
     cd $SRC
+    return $ERR
 }
 
 function create_mod_conf_file ()
@@ -45,8 +52,10 @@ s_start $0
 S=$?
 
 run_cmd build_and_install_kernel
+ERROR=$?
 run_cmd create_mod_conf_file
 
 s_end $0
 E=$?
 s_duration $0 $S $E
+exit $ERROR

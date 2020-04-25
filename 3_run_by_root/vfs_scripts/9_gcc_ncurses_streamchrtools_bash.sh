@@ -65,8 +65,8 @@ function install_gcc ()
     mkdir -pv /usr/share/gdb/auto-load/usr/lib
     mv -v /usr/lib/*gdb.py /usr/share/gdb/auto-load/usr/lib
 
-    cd $SRC
     rm -rf $TG
+    cd $SRC
     return $ERR
 }
 
@@ -85,8 +85,8 @@ function install_pkg-config ()
     local ERR=$?
     make install
 
-    cd $SRC
     rm -rf $TG
+    cd $SRC
     return $ERR
 }
 
@@ -129,9 +129,8 @@ function install_ncurses ()
     make sources libs
     cp -av lib/lib*.so.5* /usr/lib
 
-
-    cd $SRC
     rm -rf $TG
+    cd $SRC
 }
 
 function install_libcap ()
@@ -147,8 +146,8 @@ function install_libcap ()
     make lib=lib install
     chmod -v 755 /lib/libcap.so.2.31
 
-    cd $SRC
     rm -rf $TG
+    cd $SRC
     return $ERR
 }
 
@@ -170,8 +169,8 @@ function install_sed ()
     install -d -m755           /usr/share/doc/sed-4.8
     install -m644 doc/sed.html /usr/share/doc/sed-4.8
 
-    cd $SRC
     rm -rf $TG
+    cd $SRC
     return $ERR
 }
 
@@ -187,8 +186,8 @@ function install_psmisc ()
     mv -v /usr/bin/fuser   /bin
     mv -v /usr/bin/killall /bin
 
-    cd $SRC
     rm -rf $TG
+    cd $SRC
 }
 
 
@@ -201,8 +200,8 @@ function install_iana-etc ()
     make
     make install
 
-    cd $SRC
     rm -rf $TG
+    cd $SRC
 }
 
 
@@ -216,8 +215,8 @@ function install_bison ()
     make
     make install
 
-    cd $SRC
     rm -rf $TG
+    cd $SRC
 }
 
 function install_flex ()
@@ -227,15 +226,14 @@ function install_flex ()
     cd $TG
 
     sed -i "/math.h/a #include <malloc.h>" src/flexdef.h
-    HELP2MAN=/tools/bin/true \
-    ./configure --prefix=/usr --docdir=/usr/share/doc/flex-2.6.4
+    HELP2MAN=/tools/bin/true ./configure --prefix=/usr --docdir=/usr/share/doc/flex-2.6.4
     make
     make check
     local ERR=$?
     make install
 
-    cd $SRC
     rm -rf $TG
+    cd $SRC
     return $ERR
 }
 
@@ -251,8 +249,8 @@ function install_grep ()
     local ERR=$?
     make install
 
-    cd $SRC
     rm -rf $TG
+    cd $SRC
     return $ERR
 }
 
@@ -273,8 +271,8 @@ function install_bash ()
     make install
     mv -vf /usr/bin/bash /bin
 
-    cd $SRC
     rm -rf $TG
+    cd $SRC
     return $ERR
 }
 

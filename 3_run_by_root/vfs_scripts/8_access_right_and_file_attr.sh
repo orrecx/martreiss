@@ -19,8 +19,8 @@ function install_attr ()
     mv -v /usr/lib/libattr.so.* /lib
     ln -sfv ../../lib/$(readlink /usr/lib/libattr.so) /usr/lib/libattr.so
 
-    cd $SRC
     rm -rf $TG
+    cd $SRC
 }
 
 function install_acl ()
@@ -40,8 +40,8 @@ function install_acl ()
     mv -v /usr/lib/libacl.so.* /lib
     ln -sfv ../../lib/$(readlink /usr/lib/libacl.so) /usr/lib/libacl.so
 
-    cd $SRC
     rm -rf $TG
+    cd $SRC
 }
 
 function install_shadow ()
@@ -65,8 +65,8 @@ function install_shadow ()
     grpconv
     ( echo edge; echo edge ) | passwd root
 
-    cd $SRC
     rm -rf $TG
+    cd $SRC
 }
 
 #------------------------------------------------

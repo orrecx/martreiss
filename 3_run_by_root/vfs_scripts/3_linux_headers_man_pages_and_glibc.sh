@@ -14,8 +14,8 @@ function install_linux_headers()
     rm usr/include/Makefile
     cp -rv usr/include/* /usr/include
 
-    cd $SRC
     rm -rf $TG
+    cd $SRC
 }
 
 function install_man_pages()
@@ -26,8 +26,8 @@ function install_man_pages()
 
     make install
 
-    cd $SRC
     rm -rf $TG
+    cd $SRC
 }
 
 function build_and_install_glibc ()
@@ -107,8 +107,8 @@ EOF
     ln -svf /usr/share/zoneinfo/Europe/Berlin /etc/localtime
     unset ZONEINFO
 
-    cd $SRC
     rm -rf $TG
+    cd $SRC
 # dynamic loader
 cat > /etc/ld.so.conf << "EOF"
 # Begin /etc/ld.so.conf

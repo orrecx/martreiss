@@ -15,8 +15,8 @@ function install_zlib()
     mv -v /usr/lib/libz.so.* /lib
     ln -svf ../../lib/$(readlink /usr/lib/libz.so) /usr/lib/libz.so
 
-    cd $SRC
     rm -rf $TG
+    cd $SRC
 }
 
 function build_bzip2 ()
@@ -40,8 +40,8 @@ function build_bzip2 ()
     ln -sv bzip2 /bin/bunzip2
     ln -sv bzip2 /bin/bzcat
 
-    cd $SRC
     rm -rf $TG
+    cd $SRC
 }
 
 function install_xz ()
@@ -59,8 +59,8 @@ function install_xz ()
     mv -v /usr/lib/liblzma.so.* /lib
     ln -svf ../../lib/$(readlink /usr/lib/liblzma.so) /usr/lib/liblzma.so
 
-    cd $SRC
     rm -rf $TG
+    cd $SRC
 }
 
 #------------------------------------------------
