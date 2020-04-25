@@ -86,6 +86,7 @@ if [ -n "$BUILD" ] ; then
     #bind_bootdir_from_host_to_lfs_env
     cp -f -v -r $SYS_CONF_SCRIPTS_DIR $LFS/$SYS_CONF_SCRIPTS_DIR
     cp -f -v utils.sh $LFS/$SYS_CONF_SCRIPTS_DIR
+    cp -f -v kernel_build_config $LFS/$SYS_CONF_SCRIPTS_DIR
     #run_in_lfs_env "/$SYS_CONF_SCRIPTS_DIR/sys_config_main.sh"
 
     #rm -v -rf $LFS/$SYS_CONF_SCRIPTS_DIR

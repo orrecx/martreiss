@@ -10,8 +10,10 @@ function build_and_install_kernel ()
     cd $TG
     exit 0
     make mrproper
-	make menuconfig
+	#make menuconfig
     local ERR=$?
+    cp -v /$SYS_CONF_SCRIPTS_DIR/kernel_build_config .config
+    
     if [ $ERR -eq 0 ]; then
         make
 
