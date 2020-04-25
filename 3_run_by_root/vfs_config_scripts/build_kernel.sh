@@ -8,7 +8,7 @@ function build_and_install_kernel ()
     cd $SRC
     local TG=$(extract linux-5.5.3.tar.xz)
     cd $TG
-    exit 0
+    
     make mrproper
 	#make menuconfig
     local ERR=$?
