@@ -74,20 +74,23 @@ if [ -n "$BUILD" ] ; then
     CD=$(dirname $CD)
     cd $CD
 
-    #./1_create_virtual_fs.sh
+    ./1_create_virtual_fs.sh
     cp -f -v -r $BUILD_SCRIPTS_DIR $LFS/$BUILD_SCRIPTS_DIR
     cp -f -v utils.sh $LFS/$BUILD_SCRIPTS_DIR
 
-    #run_in_lfs_env "/$BUILD_SCRIPTS_DIR/vfs_main.sh" ":/tools/bin:/tools/$(uname -m)-pc-linux-gnu/bin" 
+    run_in_lfs_env "/$BUILD_SCRIPTS_DIR/vfs_main.sh" ":/tools/bin:/tools/$(uname -m)-pc-linux-gnu/bin" 
     #run_in_lfs_env "/$BUILD_SCRIPTS_DIR/12_cleanup.sh"
 
-    #rm -v -rf $LFS/$BUILD_SCRIPTS_DIR
+    rm -v -rf $LFS/$BUILD_SCRIPTS_DIR
 
     #bind_bootdir_from_host_to_lfs_env
     cp -f -v -r $SYS_CONF_SCRIPTS_DIR $LFS/$SYS_CONF_SCRIPTS_DIR
     cp -f -v utils.sh $LFS/$SYS_CONF_SCRIPTS_DIR
     cp -f -v kernel_build_config $LFS/$SYS_CONF_SCRIPTS_DIR
-    #run_in_lfs_env "/$SYS_CONF_SCRIPTS_DIR/sys_config_main.sh"
+    cp -f -v bashrc $LFS/root/.bashrc
+    cp -f -v profile $LFS/root/.profile
 
-    #rm -v -rf $LFS/$SYS_CONF_SCRIPTS_DIR
+    run_in_lfs_env "/$SYS_CONF_SCRIPTS_DIR/sys_config_main.sh"
+
+    rm -v -rf $LFS/$SYS_CONF_SCRIPTS_DIR
 fi
