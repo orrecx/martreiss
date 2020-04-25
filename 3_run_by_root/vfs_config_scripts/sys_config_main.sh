@@ -10,6 +10,7 @@ S=$?
 /$SYS_CONF_SCRIPTS_DIR/bootscripts.sh
 /$SYS_CONF_SCRIPTS_DIR/devices_handling_and_network_conf.sh
 /$SYS_CONF_SCRIPTS_DIR/sysvinit_and_confs.sh
+/$SYS_CONF_SCRIPTS_DIR/build_kernel.sh
 /$SYS_CONF_SCRIPTS_DIR/make_lfs_bootable.sh
 /$SYS_CONF_SCRIPTS_DIR/set_system_version.sh
 

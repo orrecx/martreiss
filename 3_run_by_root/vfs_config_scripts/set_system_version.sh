@@ -4,23 +4,23 @@ SRC="/sources"
 
 function create_lsb_release ()
 {
-    echo 9.1 > /etc/lfs-release
+    echo 1.0 > /etc/lfs-release
     cat > /etc/lsb-release << "EOF"
-DISTRIB_ID="Linux OREX LAB"
-DISTRIB_RELEASE="9.1"
-DISTRIB_CODENAME="orex-lab"
-DISTRIB_DESCRIPTION="Linux From Scratch Tuto"
+DISTRIB_ID="MATRISSYS"
+DISTRIB_RELEASE="1.0"
+DISTRIB_CODENAME="lfs-lab"
+DISTRIB_DESCRIPTION="MATRISSYS: Linux sys based on Linux From Scratch Tuto Version 9.1"
 EOF
 }
 
 function create_os_release ()
 {
     cat > /etc/os-release << "EOF"
-NAME="Linux From Scratch"
-VERSION="9.1"
-ID=lfs
-PRETTY_NAME="LFS OREX LAB 9.1"
-VERSION_CODENAME="orex-lab"
+NAME="matrissys"
+VERSION="1.0"
+ID=lfs-lab
+PRETTY_NAME="matrissys lfs-lab 1.0"
+VERSION_CODENAME="lfs-lab"
 EOF
 }
 

@@ -42,9 +42,9 @@ function run_in_lfs_env ()
         /tools/bin/bash -c "$1"
 }
 
-function intermediate_configuration ()
+function bind_bootdir_from_host_to_lfs_env ()
 {
-    #make this possible in order the new compiled linux-kernel to /boot
+    #make this possible in order for the new compiled linux-kernel to /boot
     mount --bind /boot /mnt/lfs/boot
 }
 
@@ -81,10 +81,9 @@ if [ -n "$BUILD" ] ; then
     #run_in_lfs_env "/$BUILD_SCRIPTS_DIR/vfs_main.sh" ":/tools/bin:/tools/$(uname -m)-pc-linux-gnu/bin" 
     #run_in_lfs_env "/$BUILD_SCRIPTS_DIR/12_cleanup.sh"
 
-    #intermediate_configuration
-
     #rm -v -rf $LFS/$BUILD_SCRIPTS_DIR
 
+    #bind_bootdir_from_host_to_lfs_env
     cp -f -v -r $SYS_CONF_SCRIPTS_DIR $LFS/$SYS_CONF_SCRIPTS_DIR
     cp -f -v utils.sh $LFS/$SYS_CONF_SCRIPTS_DIR
     #run_in_lfs_env "/$SYS_CONF_SCRIPTS_DIR/sys_config_main.sh"
