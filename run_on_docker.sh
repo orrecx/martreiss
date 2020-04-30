@@ -1,7 +1,7 @@
 #!/bin/bash
 BUILD=
 RUN=
-CN="lfslab"
+CN="matrissys"
 TAG="v1.0"
 VOL="$(pwd)/lfs_volume"
 
@@ -35,7 +35,7 @@ CD=$(realpath $0)
 CD=$(dirname $CD)
 cd $CD
 
-while [ "$1" ]; do
+while [ "x$1" != "x" ]; do
     case $1 in
     -b|--build)
         _build_image

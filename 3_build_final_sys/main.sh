@@ -76,7 +76,7 @@ if [ -n "$BUILD" ] ; then
 
     ./1_create_virtual_fs.sh
     cp -f -v -r $BUILD_SCRIPTS_DIR $LFS/$BUILD_SCRIPTS_DIR
-    cp -f -v utils.sh $LFS/$BUILD_SCRIPTS_DIR
+    cp -f -v ../common/utils.sh $LFS/$BUILD_SCRIPTS_DIR
 
     run_in_lfs_env "/$BUILD_SCRIPTS_DIR/vfs_main.sh" ":/tools/bin:/tools/$(uname -m)-pc-linux-gnu/bin" 
     #run_in_lfs_env "/$BUILD_SCRIPTS_DIR/12_cleanup.sh"
@@ -85,7 +85,7 @@ if [ -n "$BUILD" ] ; then
 
     #bind_bootdir_from_host_to_lfs_env
     cp -f -v -r $SYS_CONF_SCRIPTS_DIR $LFS/$SYS_CONF_SCRIPTS_DIR
-    cp -f -v utils.sh $LFS/$SYS_CONF_SCRIPTS_DIR
+    cp -f -v ../common/utils.sh $LFS/$SYS_CONF_SCRIPTS_DIR
     cp -f -v kernel_build_config $LFS/$SYS_CONF_SCRIPTS_DIR
     cp -f -v bashrc $LFS/root/.bashrc
     cp -f -v profile $LFS/root/.profile

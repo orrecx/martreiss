@@ -394,17 +394,16 @@ function build_sample ()
     rm -rf $TG
 }
 
-source ../common/helper.sh
+source ../common/utils.sh
 source ./build_testtools.sh
 source ./build_generics.sh
 #------------------------------------------------
 
 #--------------- main ---------------------------
 cd $SRC
-START_TIME=$(date +"%s")
-echo "-----------------------"
-echo "START: $(date -d@$START_TIME -u +%H:%M:%S)"
-echo "-----------------------"
+s_start $0
+START_TIME=$?
+
 check_environment
 run_cmd build_binutils
 run_cmd build_gcc
@@ -442,9 +441,7 @@ run_cmd build_tar
 run_cmd build_textinfo
 run_cmd build_xz
 #-------------------------------------
-END_TIME=$(date +"%s")
-echo "-----------------------"
-echo "END: $(date -d@$END_TIME -u +%H:%M:%S)"
-echo "-----------------------"
-DURATION=$(expr $END_TIME - $START_TIME)
-echo "Duration: $(date -d@$DURATION -u +%H:%M:%S) "
+s_end $0
+END_TIME=$?
+
+s_duration $END_TIME $START_TIME

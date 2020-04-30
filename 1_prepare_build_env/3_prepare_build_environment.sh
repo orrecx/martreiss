@@ -8,7 +8,7 @@ SRC="$LFS/sources"
 chmod -v a+wt $SRC
 ln -sv $LFS/tools /
 [ ! -f "wget-list" ] && wget -c http://www.linuxfromscratch.org/lfs/view/stable/wget-list -o $LFS/wget-list
-wget --input-file=wget-list --continue --directory-prefix=$SRC
+wget --input-file="$LFS/wget-list" --continue --directory-prefix=$SRC
 #the path to openssl is wrong
 cd $SRC
 wget -c https://www.openssl.org/source/old/1.1.1/openssl-1.1.1d.tar.gz
