@@ -6,14 +6,14 @@ COPY common /workspace/common
 COPY build_on_docker /workspace/build_on_docker
 ENV LFS="/lfs"
 WORKDIR /workspace
-CMD ["./build_on_docker/1_main_mini_sys.sh"]
+RUN ./build_on_docker/1_main_mini_sys.sh
 
 FROM scratch as basic_sys
 COPY --from=mini_sys /lfs/tools /tools
 COPY --from=mini_sys /lfs/sources /sources
 COPY --from=mini_sys /lfs/tools/bin/bash /bin/sh
 COPY --from=mini_sys /lfs/tools/bin/bash /bin/bash
-ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/tools/bin" WRK="/workspace"
+ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/tools/bin" WRK="/workspace" LFS=""
 
 COPY 3_build_final_sys/vfs_scripts /workspace/vfs_scripts
 COPY common/utils.sh /workspace/vfs_scripts/utils.sh
