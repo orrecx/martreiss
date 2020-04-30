@@ -1,8 +1,8 @@
 #no need for shebang because /bin/bash does not exist and this script is being run by bash
-if [ "$1" = "--docker" ]; then
-    BUILD_SCRIPTS_DIR="vfs_scripts"
-else
+if [ "$1" == "--docker" ]; then
     BUILD_SCRIPTS_DIR="$WRK/vfs_scripts"
+else
+    BUILD_SCRIPTS_DIR="vfs_scripts"
 fi
 
 source /$BUILD_SCRIPTS_DIR/utils.sh

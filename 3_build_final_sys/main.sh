@@ -1,9 +1,10 @@
 #!/bin/bash
-CLEAR=
-BUILD=
+
 BUILD_SCRIPTS_DIR="vfs_scripts"
 SYS_CONF_SCRIPTS_DIR="vfs_config_scripts"
 DOCKER_CONTEXT=0
+BUILD=0
+CLEAR=0
 
 function _help ()
 {
@@ -42,12 +43,6 @@ function run_in_lfs_env ()
         /tools/bin/bash -c "$1"
 }
 
-function run_in_docker_env ()
-{
-    eval "$1 --docker"
-    return $?
-}
-
 function bind_bootdir_from_host_to_lfs_env ()
 {
     #make this possible in order for the new compiled linux-kernel to /boot
@@ -58,8 +53,8 @@ function bind_bootdir_from_host_to_lfs_env ()
 [ -z "$1" ] && echo "[ERROR]:" && _help && exit 3
 while [ "$1" ]; do
     case "$1" in
-    -c|--clear) CLEAR="1" ;;
-    -b|--build) BUILD="1" ;;
+    -c|--clear) CLEAR=1 ;;
+    -b|--build) BUILD=1 ;;
     --docker)
         export LFS=""
         DOCKER_CONTEXT=1 
@@ -80,11 +75,11 @@ CD=$(realpath $0)
 CD=$(dirname $CD)
 cd $CD
 
-if [ -n "$CLEAR" ] ; then
+if [ $CLEAR -eq 1 ] ; then
     _clear
 fi
 
-if [ -n "$BUILD" ] ; then
+if [ $BUILD -eq 1 ] ; then
     ./1_create_virtual_fs.sh
     cp -f -v -r $BUILD_SCRIPTS_DIR $LFS/$BUILD_SCRIPTS_DIR
     cp -f -v ../common/utils.sh $LFS/$BUILD_SCRIPTS_DIR
@@ -103,8 +98,8 @@ fi
 
 if [ $DOCKER_CONTEXT -eq 1 ] ; then
     ./1_create_virtual_fs.sh
-    run_in_docker_env  "./$BUILD_SCRIPTS_DIR/vfs_main.sh"        
+    ./$BUILD_SCRIPTS_DIR/vfs_main.sh --docker        
     cp -f -v bashrc /root/.bashrc
     cp -f -v profile /root/.profile
-    run_in_docker_env "./$SYS_CONF_SCRIPTS_DIR/sys_config_main.sh"
+    ./$SYS_CONF_SCRIPTS_DIR/sys_config_main.sh --docker
 fi

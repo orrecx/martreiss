@@ -13,7 +13,7 @@ FROM scratch as basic_sys
 #COPY --from=mini_sys /lfs/sources /sources
 COPY tmp/tools /tools
 COPY tmp/sources /sources
-ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/tools/bin"
+ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/tools/bin" WRK="workspace"
 COPY tmp/tools/bin/bash /bin/sh
 COPY tmp/tools/bin/bash /bin/bash
 
@@ -28,7 +28,7 @@ COPY 3_build_final_sys/profile /workspace/vfs_config_scripts/profile
 
 COPY build_on_docker/2_main_basic_sys.sh /workspace/2_main_basic_sys.sh
 COPY 3_build_final_sys/main.sh /workspace/main.sh
-
+COPY 3_build_final_sys/1_create_virtual_fs.sh  /workspace/1_create_virtual_fs.sh
 RUN mkdir -pv /lfs/results
 
 WORKDIR /workspace
