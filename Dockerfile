@@ -6,17 +6,25 @@ COPY common /workspace/common
 COPY build_on_docker /workspace/build_on_docker
 ENV LFS="/lfs"
 WORKDIR /workspace
-CMD ["./build_on_docker/main.sh"]
+CMD ["./build_on_docker/1_main_mini_sys.sh"]
 
-#FROM ubuntu:eoan as final_sys
-#RUN mkdir -pv /lfs/results
-#WORKDIR /lfs
-#COPY --from=mini_sys /lfs/tools .
-#COPY --from=mini_sys /lfs/sources .
-#COPY tmp/sources ./sources/
-#COPY tmp/tools ./tools/
-#COPY with_docker_final ./
-#RUN chmod +x /lfs/tools/bin/ls
-#RUN cd / && rm -rf $(/lfs/tools/bin/ls -1 / | /lfs/tools/bin/grep -v lfs )
-#RUN export LFS="/lfs"
-#CMD ["/lfs/tools/bin/bash", "-c", "/lfs/main.sh"]
+FROM scratch as basic_sys
+COPY --from=mini_sys /lfs/tools /tools
+COPY --from=mini_sys /lfs/sources /sources
+ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/tools/bin"
+RUN mkdir -vp /workspace
+
+COPY 3_build_final_sys/vfs_scripts /workspace/vfs_scripts
+COPY common/utils.sh /workspace/vfs_scripts/utils.sh
+COPY 3_build_final_sys/vfs_config_scripts /workspace/vfs_config_scripts
+COPY common/utils.sh /workspace/vfs_config_scripts/utils.sh
+
+COPY 3_build_final_sys/kernel_build_config /workspace/vfs_config_scripts/kernel_build_config
+COPY 3_build_final_sys/bashrc /workspace/vfs_config_scripts/bashrc
+COPY 3_build_final_sys/profile /workspace/vfs_config_scripts/profile
+
+COPY build_on_docker/2_main_basic_sys.sh /workspace/2_main_basic_sys.sh
+COPY 3_build_final_sys/main.sh /workspace/main.sh
+
+WORKDIR /workspace
+CMD ["./2_main_basic_sys.sh"]

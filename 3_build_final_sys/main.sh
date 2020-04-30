@@ -3,7 +3,7 @@ CLEAR=
 BUILD=
 BUILD_SCRIPTS_DIR="vfs_scripts"
 SYS_CONF_SCRIPTS_DIR="vfs_config_scripts"
-
+DOCKER_CONTEXT=0
 
 function _help ()
 {
@@ -42,6 +42,12 @@ function run_in_lfs_env ()
         /tools/bin/bash -c "$1"
 }
 
+function run_in_docker_env ()
+{
+    eval "$1 --docker"
+    return $?
+}
+
 function bind_bootdir_from_host_to_lfs_env ()
 {
     #make this possible in order for the new compiled linux-kernel to /boot
@@ -49,19 +55,26 @@ function bind_bootdir_from_host_to_lfs_env ()
 }
 
 #------------------------ main ------------------------
-[ "$(id -u)" -ne $(id -u root) ] && echo "[ERROR]: run this script as root" && exit 1
-[ -z "$LFS" -o ! -d "$LFS" ] && \
-echo "[ERROR]: Environment variable LFS is not set yet or directory $LFS does not exist yet" && exit 2
-
 [ -z "$1" ] && echo "[ERROR]:" && _help && exit 3
 while [ "$1" ]; do
     case "$1" in
     -c|--clear) CLEAR="1" ;;
     -b|--build) BUILD="1" ;;
+    --docker)
+        export LFS=""
+        export WRK="workspace" 
+        DOCKER_CONTEXT=1 
+        ;;
     *)   echo -e "[ERROR]:" && _help ;;
     esac
     shift
 done
+
+if [ $DOCKER_CONTEXT -eq 0 ]; then
+    [ "$(id -u)" -ne $(id -u root) ] && echo "[ERROR]: run this script as root" && exit 1
+    [ -z "$LFS" -o ! -d "$LFS" ] && \
+    echo "[ERROR]: Environment variable LFS is not set yet or directory $LFS does not exist yet" && exit 2
+fi
 
 echo "================ MAIN: CONSTRUCT SYSTEM ================"
 
@@ -69,28 +82,29 @@ if [ -n "$CLEAR" ] ; then
     _clear
 fi
 
-if [ -n "$BUILD" ] ; then
+if [ -n "$BUILD" -o $DOCKER_CONTEXT -eq 1 ] ; then
     CD=$(realpath $0)
     CD=$(dirname $CD)
     cd $CD
-
     ./1_create_virtual_fs.sh
-    cp -f -v -r $BUILD_SCRIPTS_DIR $LFS/$BUILD_SCRIPTS_DIR
-    cp -f -v ../common/utils.sh $LFS/$BUILD_SCRIPTS_DIR
-
-    run_in_lfs_env "/$BUILD_SCRIPTS_DIR/vfs_main.sh" ":/tools/bin:/tools/$(uname -m)-pc-linux-gnu/bin" 
-    #run_in_lfs_env "/$BUILD_SCRIPTS_DIR/12_cleanup.sh"
-
-    rm -v -rf $LFS/$BUILD_SCRIPTS_DIR
-
-    #bind_bootdir_from_host_to_lfs_env
-    cp -f -v -r $SYS_CONF_SCRIPTS_DIR $LFS/$SYS_CONF_SCRIPTS_DIR
-    cp -f -v ../common/utils.sh $LFS/$SYS_CONF_SCRIPTS_DIR
-    cp -f -v kernel_build_config $LFS/$SYS_CONF_SCRIPTS_DIR
-    cp -f -v bashrc $LFS/root/.bashrc
-    cp -f -v profile $LFS/root/.profile
-
-    run_in_lfs_env "/$SYS_CONF_SCRIPTS_DIR/sys_config_main.sh"
-
-    rm -v -rf $LFS/$SYS_CONF_SCRIPTS_DIR
+    if [ $DOCKER_CONTEXT -eq 0 ]; then
+        cp -f -v -r $BUILD_SCRIPTS_DIR $LFS/$BUILD_SCRIPTS_DIR
+        cp -f -v ../common/utils.sh $LFS/$BUILD_SCRIPTS_DIR
+        run_in_lfs_env "/$BUILD_SCRIPTS_DIR/vfs_main.sh" ":/tools/bin:/tools/$(uname -m)-pc-linux-gnu/bin" 
+        #run_in_lfs_env "/$BUILD_SCRIPTS_DIR/12_cleanup.sh"
+        rm -v -rf $LFS/$BUILD_SCRIPTS_DIR
+        #bind_bootdir_from_host_to_lfs_env
+        cp -f -v -r $SYS_CONF_SCRIPTS_DIR $LFS/$SYS_CONF_SCRIPTS_DIR
+        cp -f -v ../common/utils.sh $LFS/$SYS_CONF_SCRIPTS_DIR
+        cp -f -v kernel_build_config $LFS/$SYS_CONF_SCRIPTS_DIR
+        cp -f -v bashrc $LFS/root/.bashrc
+        cp -f -v profile $LFS/root/.profile
+        run_in_lfs_env "/$SYS_CONF_SCRIPTS_DIR/sys_config_main.sh"
+        rm -v -rf $LFS/$SYS_CONF_SCRIPTS_DIR
+    else
+        run_in_docker_env  "./$BUILD_SCRIPTS_DIR/vfs_main.sh"        
+        cp -f -v bashrc /root/.bashrc
+        cp -f -v profile /root/.profile
+        run_in_docker_env "./$SYS_CONF_SCRIPTS_DIR/sys_config_main.sh"
+    fi
 fi
