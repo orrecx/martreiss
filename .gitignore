@@ -1,3 +1,5 @@
 aaa.sh
 tmp
 tmp/*
+lfs_volume
+lfs_volume.backup
