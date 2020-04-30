@@ -4,8 +4,10 @@ function install_all_needed_tools ()
 {
   apt-get update
   echo "installing needed tools"
-  apt-get install -y bash grep gzip binutils-common bison bzip2 coreutils diffutils findutils gawk \
-  m4 patch perl python3 sed tar texinfo xz-utils build-essential wget
+  apt-get install -y  bash wget grep gzip binutils-common \
+                      bison bzip2 coreutils diffutils \
+                      findutils gawk m4 patch perl python3 \
+                      sed tar texinfo xz-utils build-essential
 }
 
 function check_tools_version ()

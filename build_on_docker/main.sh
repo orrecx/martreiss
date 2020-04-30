@@ -14,4 +14,5 @@ CD=$(dirname $CD)
 cd $CD
 
 ../1_prepare_build_env/main.sh --docker
+
 ../2_build_mini_sys/main.sh --docker

@@ -57,7 +57,7 @@ if [ -n "$INSTALL" -o $DOCKER_CONTEXT -eq 1 ]; then
     CD=$(dirname $CD)
     cd $CD
     ./1_install_essential_tools.sh
-    [ $DOCKER_CONTEXT -eq 0 ] && ./2_prepare_lfs_filesystem.sh "$DISK"
+    [ $DOCKER_CONTEXT -ne 1 ] && ./2_prepare_lfs_filesystem.sh "$DISK"
     ./3_prepare_build_environment.sh
-    [ $DOCKER_CONTEXT -eq 0 ] && ./4_install_lfs_user.sh
+    [ $DOCKER_CONTEXT -ne 1 ] && ./4_install_lfs_user.sh
 fi

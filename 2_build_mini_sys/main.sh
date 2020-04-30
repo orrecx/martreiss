@@ -11,8 +11,8 @@ function delete_unecessary_files ()
 function archive_artefact ()
 {
     echo "archive_artefact.."
-    tar cvf $LFS/tools.tar $LFS/tools
-    gzip -v $LFS/tools.tar
+    tar cvf $LFS/results/tools.tar $LFS/tools
+    gzip -v $LFS/results/tools.tar
 }
 
 
