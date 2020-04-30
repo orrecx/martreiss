@@ -62,7 +62,6 @@ while [ "$1" ]; do
     -b|--build) BUILD="1" ;;
     --docker)
         export LFS=""
-        export WRK="workspace" 
         DOCKER_CONTEXT=1 
         ;;
     *)   echo -e "[ERROR]:" && _help ;;
@@ -77,34 +76,35 @@ if [ $DOCKER_CONTEXT -eq 0 ]; then
 fi
 
 echo "================ MAIN: CONSTRUCT SYSTEM ================"
+CD=$(realpath $0)
+CD=$(dirname $CD)
+cd $CD
 
 if [ -n "$CLEAR" ] ; then
     _clear
 fi
 
-if [ -n "$BUILD" -o $DOCKER_CONTEXT -eq 1 ] ; then
-    CD=$(realpath $0)
-    CD=$(dirname $CD)
-    cd $CD
+if [ -n "$BUILD" ] ; then
     ./1_create_virtual_fs.sh
-    if [ $DOCKER_CONTEXT -eq 0 ]; then
-        cp -f -v -r $BUILD_SCRIPTS_DIR $LFS/$BUILD_SCRIPTS_DIR
-        cp -f -v ../common/utils.sh $LFS/$BUILD_SCRIPTS_DIR
-        run_in_lfs_env "/$BUILD_SCRIPTS_DIR/vfs_main.sh" ":/tools/bin:/tools/$(uname -m)-pc-linux-gnu/bin" 
-        #run_in_lfs_env "/$BUILD_SCRIPTS_DIR/12_cleanup.sh"
-        rm -v -rf $LFS/$BUILD_SCRIPTS_DIR
-        #bind_bootdir_from_host_to_lfs_env
-        cp -f -v -r $SYS_CONF_SCRIPTS_DIR $LFS/$SYS_CONF_SCRIPTS_DIR
-        cp -f -v ../common/utils.sh $LFS/$SYS_CONF_SCRIPTS_DIR
-        cp -f -v kernel_build_config $LFS/$SYS_CONF_SCRIPTS_DIR
-        cp -f -v bashrc $LFS/root/.bashrc
-        cp -f -v profile $LFS/root/.profile
-        run_in_lfs_env "/$SYS_CONF_SCRIPTS_DIR/sys_config_main.sh"
-        rm -v -rf $LFS/$SYS_CONF_SCRIPTS_DIR
-    else
-        run_in_docker_env  "./$BUILD_SCRIPTS_DIR/vfs_main.sh"        
-        cp -f -v bashrc /root/.bashrc
-        cp -f -v profile /root/.profile
-        run_in_docker_env "./$SYS_CONF_SCRIPTS_DIR/sys_config_main.sh"
-    fi
+    cp -f -v -r $BUILD_SCRIPTS_DIR $LFS/$BUILD_SCRIPTS_DIR
+    cp -f -v ../common/utils.sh $LFS/$BUILD_SCRIPTS_DIR
+    run_in_lfs_env "/$BUILD_SCRIPTS_DIR/vfs_main.sh" ":/tools/bin:/tools/$(uname -m)-pc-linux-gnu/bin" 
+    #run_in_lfs_env "/$BUILD_SCRIPTS_DIR/12_cleanup.sh"
+    rm -v -rf $LFS/$BUILD_SCRIPTS_DIR
+    #bind_bootdir_from_host_to_lfs_env
+    cp -f -v -r $SYS_CONF_SCRIPTS_DIR $LFS/$SYS_CONF_SCRIPTS_DIR
+    cp -f -v ../common/utils.sh $LFS/$SYS_CONF_SCRIPTS_DIR
+    cp -f -v kernel_build_config $LFS/$SYS_CONF_SCRIPTS_DIR
+    cp -f -v bashrc $LFS/root/.bashrc
+    cp -f -v profile $LFS/root/.profile
+    run_in_lfs_env "/$SYS_CONF_SCRIPTS_DIR/sys_config_main.sh"
+    rm -v -rf $LFS/$SYS_CONF_SCRIPTS_DIR
+fi
+
+if [ $DOCKER_CONTEXT -eq 1 ] ; then
+    ./1_create_virtual_fs.sh
+    run_in_docker_env  "./$BUILD_SCRIPTS_DIR/vfs_main.sh"        
+    cp -f -v bashrc /root/.bashrc
+    cp -f -v profile /root/.profile
+    run_in_docker_env "./$SYS_CONF_SCRIPTS_DIR/sys_config_main.sh"
 fi

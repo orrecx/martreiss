@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 function delete_unecessary_files ()
 {
     echo "Don't do this because it will damage the compile environment"
