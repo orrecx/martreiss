@@ -15,19 +15,19 @@ COPY --from=mini_sys /lfs/tools/bin/bash /bin/sh
 COPY --from=mini_sys /lfs/tools/bin/bash /bin/bash
 ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/tools/bin" WRK="/workspace" LFS=""
 
-COPY 3_build_final_sys/vfs_scripts /workspace/vfs_scripts
-COPY common/utils.sh /workspace/vfs_scripts/utils.sh
-COPY 3_build_final_sys/vfs_config_scripts /workspace/vfs_config_scripts
-COPY common/utils.sh /workspace/vfs_config_scripts/utils.sh
+COPY 3_build_final_sys/vfs_scripts ${WRK}/vfs_scripts
+COPY common/utils.sh ${WRK}/vfs_scripts/utils.sh
+COPY 3_build_final_sys/vfs_config_scripts ${WRK}/vfs_config_scripts
+COPY common/utils.sh ${WRK}/vfs_config_scripts/utils.sh
 
-COPY 3_build_final_sys/kernel_build_config /workspace/vfs_config_scripts/kernel_build_config
-COPY 3_build_final_sys/bashrc /workspace/vfs_config_scripts/bashrc
-COPY 3_build_final_sys/profile /workspace/vfs_config_scripts/profile
+COPY 3_build_final_sys/kernel_build_config ${WRK}/vfs_config_scripts/kernel_build_config
+COPY 3_build_final_sys/bashrc ${WRK}/vfs_config_scripts/bashrc
+COPY 3_build_final_sys/profile ${WRK}/vfs_config_scripts/profile
 
-COPY build_on_docker/2_main_basic_sys.sh /workspace/2_main_basic_sys.sh
-COPY 3_build_final_sys/main.sh /workspace/main.sh
-COPY 3_build_final_sys/1_create_virtual_fs.sh  /workspace/1_create_virtual_fs.sh
+COPY build_on_docker/2_main_basic_sys.sh ${WRK}/2_main_basic_sys.sh
+COPY 3_build_final_sys/main.sh ${WRK}/main.sh
+COPY 3_build_final_sys/1_create_virtual_fs.sh  ${WRK}/1_create_virtual_fs.sh
 RUN mkdir -pv /lfs/results
 
-WORKDIR /workspace
+WORKDIR ${WRK}
 CMD ["./2_main_basic_sys.sh"]
