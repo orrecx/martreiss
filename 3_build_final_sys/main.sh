@@ -98,8 +98,8 @@ fi
 
 if [ $DOCKER_CONTEXT -eq 1 ] ; then
     ./1_create_virtual_fs.sh --docker
-    ./$BUILD_SCRIPTS_DIR/vfs_main.sh --docker        
+    ./$BUILD_SCRIPTS_DIR/vfs_main.sh      
     cp -f -v bashrc /root/.bashrc
     cp -f -v profile /root/.profile
-    ./$SYS_CONF_SCRIPTS_DIR/sys_config_main.sh --docker
+    ./$SYS_CONF_SCRIPTS_DIR/sys_config_main.sh
 fi
