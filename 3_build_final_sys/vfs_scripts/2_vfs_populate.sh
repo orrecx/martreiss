@@ -82,7 +82,7 @@ function create_logfiles ()
   chmod -v 600  /var/log/btmp
 }
 
-source /vfs_scripts/utils.sh
+source $WRK/vfs_scripts/utils.sh
 #--------------------- main --------------
 s_start $0
 

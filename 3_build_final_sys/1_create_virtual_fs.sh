@@ -1,11 +1,17 @@
 #!/bin/bash
+DOCKER_CONTEXT=0
+case "$1" in
+--docker) DOCKER_CONTEXT=1 ;;
+esac
 
-[ -z "$LFS" -o ! -d "$LFS" ] && \
-echo "[ERROR]: Environment variable LFS is not set yet or directory $LFS does not exist yet" && exit 3
+if [ $DOCKER_CONTEXT -eq 0 ]; then
+  [ -z "$LFS" -o ! -d "$LFS" ] && \
+  echo "[ERROR]: Environment variable LFS is not set yet or directory $LFS does not exist yet" && exit 3
 
-if [ -n "$1" ] && [ "$1" = "--clear" -o "$1" = "-c"  ]; then
-  _clear
-  exit 0
+  if [ -n "$1" ] && [ "$1" = "--clear" -o "$1" = "-c"  ]; then
+    _clear
+    exit 0
+  fi
 fi
 
 chown -R root:root $LFS/tools
@@ -14,7 +20,7 @@ mkdir -pv $LFS/{dev,proc,sys,run}
 mknod -m 600 $LFS/dev/console c 5 1
 mknod -m 666 $LFS/dev/null c 1 3
 #bind mount system dev to host system dev
-mount -v --bind /dev $LFS/dev
+[ $DOCKER_CONTEXT -eq 0 ] && mount -v --bind /dev $LFS/dev
 #mount type device dir options 
 mount -vt devpts devpts $LFS/dev/pts -o gid=5,mode=620
 mount -vt proc proc $LFS/proc

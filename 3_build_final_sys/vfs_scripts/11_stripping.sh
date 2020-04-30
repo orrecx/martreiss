@@ -1,4 +1,4 @@
-source /vfs_scripts/utils.sh
+source $WRK/vfs_scripts/utils.sh
 
 function stripp () 
 {

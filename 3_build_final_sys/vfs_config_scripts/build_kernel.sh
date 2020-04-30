@@ -48,7 +48,7 @@ install uhci_hcd /sbin/modprobe ehci_hcd ; /sbin/modprobe -i uhci_hcd ; true
 EOF
 }
 
-source /$SYS_CONF_SCRIPTS_DIR/utils.sh
+source $WRK/$SYS_CONF_SCRIPTS_DIR/utils.sh
 #---------------------------------------------
 s_start $0
 S=$?

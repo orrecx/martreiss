@@ -14,7 +14,7 @@ function install_bootscripts ()
     cd $SRC
 }
 
-source /$SYS_CONF_SCRIPTS_DIR/utils.sh
+source $WRK/$SYS_CONF_SCRIPTS_DIR/utils.sh
 #----------------------------
 
 s_start $0

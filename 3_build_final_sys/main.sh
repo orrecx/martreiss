@@ -97,7 +97,7 @@ if [ $BUILD -eq 1 ] ; then
 fi
 
 if [ $DOCKER_CONTEXT -eq 1 ] ; then
-    ./1_create_virtual_fs.sh
+    ./1_create_virtual_fs.sh --docker
     ./$BUILD_SCRIPTS_DIR/vfs_main.sh --docker        
     cp -f -v bashrc /root/.bashrc
     cp -f -v profile /root/.profile

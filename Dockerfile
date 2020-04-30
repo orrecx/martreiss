@@ -13,7 +13,7 @@ FROM scratch as basic_sys
 #COPY --from=mini_sys /lfs/sources /sources
 COPY tmp/tools /tools
 COPY tmp/sources /sources
-ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/tools/bin" WRK="workspace"
+ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/tools/bin" WRK="/workspace"
 COPY tmp/tools/bin/bash /bin/sh
 COPY tmp/tools/bin/bash /bin/bash
 

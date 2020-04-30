@@ -1,6 +1,4 @@
-BUILD_SCRIPTS_DIR="vfs_scripts"
-
-source /$BUILD_SCRIPTS_DIR/utils.sh
+source $WRK/vfs_scripts/utils.sh
 
 s_start $0
 S=$?

@@ -43,7 +43,7 @@ menuentry "GNU/Linux, Linux 5.5.3-lfs-9.1" {
 EOF
 }
 
-source /$SYS_CONF_SCRIPTS_DIR/utils.sh
+source $WRK/$SYS_CONF_SCRIPTS_DIR/utils.sh
 #---------------------------------------------
 s_start $0
 S=$?

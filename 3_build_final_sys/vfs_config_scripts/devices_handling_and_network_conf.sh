@@ -52,7 +52,7 @@ function create_udev_rules ()
     #cat /etc/udev/rules.d/70-persistent-net.rules
 }
 
-source /$SYS_CONF_SCRIPTS_DIR/utils.sh
+source $WRK/$SYS_CONF_SCRIPTS_DIR/utils.sh
 #--------------------------------------------
 s_start $0
 S=$?

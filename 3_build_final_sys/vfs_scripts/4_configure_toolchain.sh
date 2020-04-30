@@ -1,5 +1,5 @@
 #backup current ld
-source /vfs_scripts/utils.sh
+source $WRK/vfs_scripts/utils.sh
 
 s_start $0
 

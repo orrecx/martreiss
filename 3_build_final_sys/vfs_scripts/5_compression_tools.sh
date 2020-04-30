@@ -65,7 +65,7 @@ function install_xz ()
 
 #------------------------------------------------
 
-source /vfs_scripts/utils.sh
+source $WRK/vfs_scripts/utils.sh
 #--------------- main ---------------------------
 s_start $0
 ST=$?
