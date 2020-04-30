@@ -1,6 +1,5 @@
 FROM ubuntu:eoan as mini_sys
-RUN mkdir -pv /lfs
-RUN mkdir -pv /workspace
+RUN mkdir -pv /lfs /workspace
 COPY 1_prepare_build_env /workspace/1_prepare_build_env
 COPY 2_build_mini_sys /workspace/2_build_mini_sys
 COPY common /workspace/common
