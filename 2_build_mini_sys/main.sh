@@ -15,25 +15,47 @@ function archive_artefact ()
     gzip -v $LFS/tools.tar
 }
 
-U="lfs"
-id -u $U
-[ $? -ne 0 ] && echo "[ERROR]: a user $U is required" && exit 1
-[ "$(id -u)" -ne $(id -u $U) ] && echo "[ERROR]: run this script as user $U" && exit 2
-[ -z "$LFS" -o ! -d "$LFS" ] && \
-echo "[ERROR]: Environment variable LFS is not set yet or directory $LFS does not exist yet" && exit 3
-[ -z "$LFS_TGT" ] && echo "[ERROR]: Environment variable LFS_TGT is not set yet"
+
+#-----------------------------------------------
+DOCKER_CONTEXT=0
+
+case "$1" in
+--docker) DOCKER_CONTEXT=1 ;;
+esac
+
+if [ $DOCKER_CONTEXT -eq 0 ]; then
+    U="lfs"
+    id -u $U
+    [ $? -ne 0 ] && echo "[ERROR]: a user $U is required" && exit 1
+    [ "$(id -u)" -ne $(id -u $U) ] && echo "[ERROR]: run this script as user $U" && exit 2
+fi
+
+if [ -z "$LFS" -o ! -d "$LFS" -o -z "$LFS_TGT" ]; then
+    echo "[ERROR]: Environment variables LFS LFS_TGT are not set or directory $LFS does not exist yet"
+    exit 3
+fi
 
 CD=$(realpath $0)
 CD=$(dirname $CD)
 cd $CD
+ERROR=0
+
 echo "================ MAIN: CONSTRUCT MINIMAL SYSTEM ================"
-export MAKEFLAGS='-j 2'
-env -i HOME=$HOME TERM=$TERM LFS=$LFS LFS_TGT=$LFS_TGT PATH=$PATH 'PS1=(limited)\u:\w\$' /bin/bash -c ./build.sh
-if [ $? -eq 0 ]; then
+if [ $DOCKER_CONTEXT -eq 0 ]; then
+    export MAKEFLAGS='-j 2'
+    env -i HOME=$HOME TERM=$TERM LFS=$LFS LFS_TGT=$LFS_TGT PATH=$PATH 'PS1=(limited)\u:\w\$' /bin/bash -c ./build.sh
+    ERROR=$?
+else
+    ./build.sh
+    ERROR=$?
+fi
+
+if [ $ERROR -eq 0 ]; then
     #delete_unecessary_files
     archive_artefact
     #./backup_build_state.sh
 else
     echo "[ERROR]: build failed"
-    exit 4
 fi
+
+exit $ERROR
