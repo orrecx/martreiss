@@ -14,7 +14,7 @@ function archive_artefact ()
     cd $LFS
     tar cf  $LFS/results/tools.tar tools
     gzip -v $LFS/results/tools.tar
-    tar cf  $LFS/results/sources.tar sources.tar
+    tar cf  $LFS/results/sources.tar sources
     gzip -v $LFS/results/sources.tar
     cd -
 }

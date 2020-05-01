@@ -444,4 +444,4 @@ run_cmd build_xz
 s_end $0
 END_TIME=$?
 
-s_duration $END_TIME $START_TIME
+s_duration $0 $END_TIME $START_TIME
