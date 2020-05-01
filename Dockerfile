@@ -6,7 +6,8 @@ COPY common /workspace/common
 COPY build_on_docker /workspace/build_on_docker
 ENV LFS="/lfs"
 WORKDIR /workspace
-CMD [./build_on_docker/1_main_mini_sys.sh]
+CMD [ "./build_on_docker/1_main_mini_sys.sh" ]
+
 #RUN ./build_on_docker/1_main_mini_sys.sh
 
 #FROM scratch as basic_sys
@@ -32,4 +33,4 @@ CMD [./build_on_docker/1_main_mini_sys.sh]
 #RUN mkdir -pv /lfs/results
 #
 #WORKDIR ${WRK}
-#CMD ["./2_main_basic_sys.sh"]
+#CMD [ "./2_main_basic_sys.sh" ]
