@@ -16,7 +16,7 @@ CMD [ "./build_on_docker/1_main_mini_sys.sh" ]
 #COPY --from=mini_sys ${LFS}/sources /sources
 #COPY --from=mini_sys ${LFS}/tools/bin/bash /bin/sh
 #COPY --from=mini_sys ${LFS}/tools/bin/bash /bin/bash
-#ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/tools/bin" WRK="/workspace" LFS=""
+#ENV PATH="/tools/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" WRK="/workspace" LFS=""
 #
 #COPY 3_build_final_sys/vfs_scripts ${WRK}/vfs_scripts
 #COPY common/utils.sh ${WRK}/vfs_scripts/utils.sh
