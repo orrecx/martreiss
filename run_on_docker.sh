@@ -19,16 +19,15 @@ function _build_image ()
 
 function _run_container ()
 {
+    docker rm -f $CN &> /dev/null
     [ -d "$VOL.backup" ] && rm -rvf $VOL.backup
     [ -d "$VOL" ] && mv -v $VOL $VOL.backup
-    rm -vrf $VOL &> /dev/null
-    mkdir  $VOL
+    mkdir  -v $VOL
     docker run -v $VOL:/lfs/results --name $CN  $CN:$TAG "$@"
     return $?
 }
 
 #----------------------------------------------------------
-docker rm -f $(docker ps -aq) 2> /dev/null
 [ $# -eq 0 ] && _help && exit 1
 echo "================ START ================"
 CD=$(realpath $0)
