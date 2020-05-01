@@ -328,7 +328,7 @@ function build_coreutils ()
     local TG="coreutils-8.31"
     tar xvJf "$TG.tar.xz"
     cd $TG
-    ./configure --prefix=/tools --enable-install-program=hostname
+    FORCE_UNSAFE_CONFIGURE=1 ./configure --prefix=/tools --enable-install-program=hostname
     make
     make RUN_EXPENSIVE_TESTS=yes check
     make install
