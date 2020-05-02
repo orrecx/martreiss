@@ -22,10 +22,17 @@ function archive_artefact ()
 
 #-----------------------------------------------
 DOCKER_CONTEXT=0
+ERROR=0
+
+CD=$(realpath $0)
+CD=$(dirname $CD)
+cd $CD
 
 case "$1" in
 --docker) DOCKER_CONTEXT=1 ;;
 esac
+
+source ../common/config.sh
 
 if [ $DOCKER_CONTEXT -eq 0 ]; then
     U="lfs"
@@ -34,17 +41,12 @@ if [ $DOCKER_CONTEXT -eq 0 ]; then
     [ "$(id -u)" -ne $(id -u $U) ] && echo "[ERROR]: run this script as user $U" && exit 2
 fi
 
-if [ -z "$LFS" -o ! -d "$LFS" -o -z "$LFS_TGT" ]; then
-    echo "[ERROR]: Environment variables LFS LFS_TGT are not set or directory $LFS does not exist yet"
+if [ ! -d "$LFS" ]; then
+    echo "[ERROR]: directory $LFS does not exist yet"
     exit 3
 fi
 
-CD=$(realpath $0)
-CD=$(dirname $CD)
-cd $CD
-ERROR=0
-
-echo "================ MAIN: CONSTRUCT MINIMAL SYSTEM ================"
+echo "================ MAIN: CONSTRUCT INITIAL SYSTEM ================"
 if [ $DOCKER_CONTEXT -eq 0 ]; then
     export MAKEFLAGS='-j 2'
     env -i HOME=$HOME TERM=$TERM LFS=$LFS LFS_TGT=$LFS_TGT PATH=$PATH 'PS1=(limited)\u:\w\$' /bin/bash -c ./build.sh
@@ -57,7 +59,6 @@ fi
 if [ $ERROR -eq 0 ]; then
     #delete_unecessary_files
     archive_artefact
-    #./backup_build_state.sh
 else
     echo "[ERROR]: build failed"
 fi

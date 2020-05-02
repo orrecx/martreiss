@@ -4,3 +4,4 @@ tmp/*
 lfs_volume
 lfs_volume.backup
 backup.sh
+*.bkp

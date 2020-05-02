@@ -11,6 +11,9 @@ function _help ()
 }
 
 #------------------------------------------------
+CD=$(realpath $0)
+CD=$(dirname $CD)
+cd $CD
 
 [ -z "$1" ] && echo "[ERROR]:" && _help && exit 1
 while [ "$1" ]; do
@@ -27,17 +30,12 @@ while [ "$1" ]; do
     shift
 done
 
+source ../common/config.sh
+
 if [ $DOCKER_CONTEXT -eq 0 ]; then
     [ $(id --user) -ne 0 ] && echo "[ERROR]: only root is allowed to run this script. use sudo" && exit 1
-    export LFS="/mnt/lfs"
     [ ! -b "$DISK" ] && echo "[ERROR]: specified --disk '$DISK' is not a block-special file" && exit 4
-else
-    [ -z "$LFS" ] && export LFS="/lfs"    
 fi
-
-CD=$(realpath $0)
-CD=$(dirname $CD)
-cd $CD
 
 if [ $DOCKER_CONTEXT -eq 0 ]; then
     if [ -n "$CLEAR" ]; then
