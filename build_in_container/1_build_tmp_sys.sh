@@ -1,0 +1,19 @@
+#!/bin/bash
+echo "####################################################"
+echo "#         BUILD TEMP_SYS IN DOCKER CONTAINER       #"
+echo "####################################################"
+cd "$( dirname $(realpath $0))"
+
+DOCKER_CONTEXT=1
+export DOCKER_CONTEXT
+
+../common/config.sh
+../common/utils.sh
+
+LC_ALL=POSIX
+PATH="$TOOLS_SLINK/bin:$PATH"
+export LC_ALL PATH
+
+../1_prepare_build_env/main.sh --docker | tee $LFS/results/build.log
+
+../2_tmp_sys/main.sh --docker | tee -a $LFS/results/build.log

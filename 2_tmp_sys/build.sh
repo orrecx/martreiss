@@ -48,8 +48,8 @@ $BUILD_SCRIPT_DIR/build_sed-4.8.sh
 $BUILD_SCRIPT_DIR/build_tar-1.32.sh
 $BUILD_SCRIPT_DIR/build_texinfo-6.7.sh
 $BUILD_SCRIPT_DIR/build_xz-5.2.4.sh
-
 #-------------------------------------
+
 s_end $0
 END_TIME=$?
 

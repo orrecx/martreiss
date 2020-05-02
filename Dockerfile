@@ -1,14 +1,13 @@
 FROM ubuntu:eoan as mini_sys
-RUN mkdir -pv /lfs/results /workspace
-COPY 1_prepare_build_env /workspace/1_prepare_build_env
-COPY 2_build_mini_sys /workspace/2_build_mini_sys
-COPY common /workspace/common
-COPY build_on_docker /workspace/build_on_docker
-ENV LFS="/lfs"
-WORKDIR /workspace
-CMD [ "./build_on_docker/1_main_mini_sys.sh" ]
-
-#RUN ./build_on_docker/1_main_mini_sys.sh
+ENV WRK="/workspace" LFS="/lfs" DOCKER_CONTEXT=1
+RUN mkdir -pv ${LFS}/results ${WRK}
+COPY 1_prepare_build_env ${WRK}/1_prepare_build_env
+COPY 2_tmp_sys ${WRK}/2_tmp_sys
+COPY common ${WRK}/common
+COPY build_in_container ${WRK}/build_in_container
+WORKDIR ${WRK}
+#RUN ./build_in_container/1_build_tmp_sys.sh
+CMD [ "./build_in_container/1_build_tmp_sys.sh" ]
 
 #FROM scratch as basic_sys
 #ENV LFS="/lfs"
@@ -27,10 +26,10 @@ CMD [ "./build_on_docker/1_main_mini_sys.sh" ]
 #COPY 3_build_final_sys/bashrc ${WRK}/vfs_config_scripts/bashrc
 #COPY 3_build_final_sys/profile ${WRK}/vfs_config_scripts/profile
 #
-#COPY build_on_docker/2_main_basic_sys.sh ${WRK}/2_main_basic_sys.sh
+#COPY build_in_container/2_main_basic_sys.sh ${WRK}/2_main_basic_sys.sh
 #COPY 3_build_final_sys/main.sh ${WRK}/main.sh
 #COPY 3_build_final_sys/1_create_virtual_fs.sh  ${WRK}/1_create_virtual_fs.sh
 #RUN mkdir -pv /lfs/results
 #
 #WORKDIR ${WRK}
-#CMD [ "./2_main_basic_sys.sh" ]
+#CMD [ "./2_build_basic_sys.sh" ]
