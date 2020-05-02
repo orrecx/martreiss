@@ -18,6 +18,7 @@ function _build ()
 source ../common/config.sh
 source ../common/utils.sh
 #----------------------------------------
+echo "-------------------- $0 --------------------"
 SRC=$SOURCES_DIR
 COMP="pkg-config-0.29.2.tar.gz"
 

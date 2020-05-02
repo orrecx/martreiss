@@ -18,6 +18,7 @@ function _build ()
 source ../common/config.sh
 source ../common/utils.sh
 #----------------------------------------
+echo "-------------------- $0 --------------------"
 SRC=$SOURCES_DIR
 COMP="python-3.8.1-docs-html.tar.bz2"
 

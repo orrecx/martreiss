@@ -18,6 +18,7 @@ function _build ()
 source ../common/config.sh
 source ../common/utils.sh
 #----------------------------------------
+echo "-------------------- $0 --------------------"
 SRC=$SOURCES_DIR
 COMP="attr-2.4.48.tar.gz"
 

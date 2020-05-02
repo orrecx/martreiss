@@ -7,17 +7,19 @@ function _build ()
 	local ERR=0
 	./configure --prefix=$TOOLS_SLINK
 	make
+	make install
 	if [ "$1" == "--test" ]; then
 		make check
 		ERR=$?
 	fi
-	[ $ERR -eq 0 ] && make install || echo "[ERROR]: build failed"
+
 	return $ERR
 }
 
 source ../common/config.sh
 source ../common/utils.sh
 #----------------------------------------
+echo "-------------------- $0 --------------------"
 SRC=$SOURCES_DIR
 COMP="dejagnu-1.6.2.tar.gz"
 
