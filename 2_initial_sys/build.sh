@@ -13,7 +13,7 @@ START_TIME=$?
 
 $BUILD_SCRIPT_DIR/build_binutils-2.34.sh --pass1
 $BUILD_SCRIPT_DIR/build_gcc-9.2.0.sh --pass1
-$BUILD_SCRIPT_DIR/build_linux-5.5.3.sh --header
+$BUILD_SCRIPT_DIR/build_linux-5.5.3.sh --headers
 $BUILD_SCRIPT_DIR/build_glibc-2.31.sh
 $BUILD_SCRIPT_DIR/build_gcc-9.2.0.sh --libstdcxx
 
