@@ -2,13 +2,16 @@
 cd "$( dirname $(realpath $0))"
 ERROR=0
 
-function _build () 
+function _headers () 
 {
     make mrproper
-	if [ "$1" == "--headers" ]; then
-    	make headers
-    	cp -rv usr/include/* /tools/include
-	fi
+   	make headers
+   	cp -rv usr/include/* /tools/include
+}
+
+function _build ()
+{
+	echo "Nothing to do for now"
 }
 
 source ../common/config.sh
@@ -22,8 +25,18 @@ cd $SRC
 TG=$( extract $COMP )
 cd $TG
 
-_build $1
-ERROR=$?
+case "$1" in
+	--headers)
+	_headers
+	;;
+	--kernel)
+	_build
+	;;
+	*)
+	echo "[ERROR]: unknown argument"
+	ERROR=1
+	;;
+esac
 
 cd $SRC
 rm -v -rf $TG
