@@ -17,7 +17,7 @@ ln -sv $TOOLS_DIR /
 if [ -f "../$BACKYARD/sources.tar.gz" ]; then
     pushd ../$BACKYARD
     tar xzf sources.tar.gz
-    mv sources/* $SRC
+    mv -v sources/* $SRC
     popd
 else
     [ ! -f "$SRC/wget-list" ] && wget   -v --continue --directory-prefix=$SRC \
