@@ -54,3 +54,5 @@ s_end $0
 END_TIME=$?
 
 s_duration $0 $START_TIME $END_TIME 
+
+exit 0
