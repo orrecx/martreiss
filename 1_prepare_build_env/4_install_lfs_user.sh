@@ -1,4 +1,7 @@
 #!/bin/bash
+cd "$( dirname $(realpath $0))"
+
+source ../common/config.sh
 echo "---------------- $0 ---------------------"
 USER="lfs"
 HM="/home/$USER"

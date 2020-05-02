@@ -5,8 +5,7 @@ if [ -z "$LFS" ]; then
             LFS="/mnt/lfs"
     else
             LFS="/lfs"
-    fi      
-
+    fi
     export LFS
 fi
 
@@ -20,7 +19,22 @@ if [ -z "$SOURCES_DIR" ]; then
     export SOURCES_DIR
 fi
 
+if [ -z "$TOOLS_SLINK" ]; then
+    TOOLS_SLINK="/tools"
+    export TOOLS_DIR
+fi
+
+if [ -z "$TOOLS_DIR" ]; then
+    TOOLS_DIR="${LFS}${TOOLS_SLINK}"
+    export TOOLS_DIR
+fi
+
 if [ -z "$COMPONENTS_DIR" ]; then
     COMPONENTS_DIR="components"
     export COMPONENTS_DIR
+fi
+
+if [ -z "$UTILS" ]; then
+    UTILS="common"
+    export UTILS
 fi

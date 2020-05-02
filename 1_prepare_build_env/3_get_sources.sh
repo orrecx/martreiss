@@ -1,12 +1,19 @@
 #!/bin/bash
+cd "$( dirname $(realpath $0))"
+
+source ../common/config.sh
+source ../common/utils.sh
 #-------------------
-echo "---------------- $0 ---------------------"
-[ ! -d "$LFS" ] && echo "[ERROR]: Directory $LFS does not exist yet." && exit 1
-#create build directories
-mkdir -vp $LFS/{sources,tools}
-SRC="$LFS/sources"
+s_start $0
+START_TIME=$?
+
+mkdir -vp $SOURCES_DIR
+mkdir -vp $TOOLS_DIR
+SRC=$SOURCES_DIR
+
 chmod -v a+wt $SRC
-ln -sv $LFS/tools /
+ln -sv $TOOLS_DIR /
+
 [ ! -f "$SRC/wget-list" ] && wget   -v --continue --directory-prefix=$SRC \
                                     http://www.linuxfromscratch.org/lfs/view/stable/wget-list
 
@@ -23,9 +30,13 @@ if [ "$1" == "--check" ]; then
     popd
 fi
 
-pushd $LFS/tools
+pushd $TOOLS_DIR
 mkdir -v lib
 case $(uname -m) in
     x86_64) ln -v -s lib lib64 ;;
 esac
 popd
+
+s_end $0
+END_TIME=$?
+s_duration $0 $START_TIME $END_TIME 

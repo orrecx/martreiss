@@ -1,4 +1,9 @@
 #!/bin/bash
+CD=$(realpath $0)
+CD=$(dirname $CD)
+cd $CD
+
+#---------------------------------------------
 function delete_unecessary_files ()
 {
     echo "Don't do this because it will damage the compile environment"
@@ -23,10 +28,6 @@ function archive_artefact ()
 #-----------------------------------------------
 DOCKER_CONTEXT=0
 ERROR=0
-
-CD=$(realpath $0)
-CD=$(dirname $CD)
-cd $CD
 
 case "$1" in
 --docker) DOCKER_CONTEXT=1 ;;

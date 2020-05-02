@@ -44,50 +44,6 @@ function _generate_with_template ()
 	sed -i s/"@_COMPONENT_"/$1/g $SK
 }
 
-function _generate ()
-{
-	CZ="$1"
-	C=$(get_tool $CZ)
-	SK="$DEST/build_$C.sh"
-	
-	_overwrite_file $SK $CZ
-	[ $? -eq 0 ] && return 1
-
-	echo "generating $SK"
-	touch $SK
-	chmod +x $SK
-
-	echo	"#!/bin/bash" > $SK
-	echo	"" >> $SK
-	echo	"ERROR=0" >> $SK
-	echo	"" >> $SK
-	echo	"function _build () " >> $SK
-	echo	"{" >> $SK
-	echo -e "\tlocal ERR=0" >> $SK
-	echo -e	"\t./configure --prefix=/usr" >> $SK
-	echo -e	"\tmake" >> $SK
-	echo -e	'\tif [ "$1" == "--test" ]; then' >> $SK
-	echo -e	"\t\tmake check" >> $SK
-	echo -e	'\t\tERR=$?' >> $SK
-	echo -e	"\tfi" >> $SK
-	echo -e	'\t[ $ERR -eq 0 ] && make install || echo "[ERROR]: build failed"' >> $SK
-	echo -e	'\treturn $ERR' >> $SK
-	echo 	"}" >> $SK
-	echo	"" >> $SK
-	echo	"source ../common/utils.sh" >> $SK
-	echo	"#----------------------------------------" >> $SK
-	echo	"" >> $SK
-    echo	'cd $SRC' >> $SK
-	echo	'TG=$(extract ' " $CZ)" >> $SK
-	echo 	'cd $TG' >> $SK
-	echo	"" >> $SK
-	echo	"_build" >> $SK
-	echo	'ERROR=$?' >> $SK
-	echo	"" >> $SK
-	echo	'cd $SRC' >> $SK
-	echo	'rm -v -rf $TG' >> $SK
-	echo	'exit $ERROR' >> $SK
-}
 
 source $CD/../common/utils.sh
 #----------------------------------------------------------

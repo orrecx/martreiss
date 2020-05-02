@@ -1,4 +1,6 @@
 #!/bin/bash
+cd "$( dirname $(realpath $0))"
+
 INSTALL=
 CLEAR=
 DISK=
@@ -11,10 +13,6 @@ function _help ()
 }
 
 #------------------------------------------------
-CD=$(realpath $0)
-CD=$(dirname $CD)
-cd $CD
-
 [ -z "$1" ] && echo "[ERROR]:" && _help && exit 1
 while [ "$1" ]; do
     case "$1" in
@@ -31,6 +29,7 @@ while [ "$1" ]; do
 done
 
 source ../common/config.sh
+source ../common/utils.sh
 
 if [ $DOCKER_CONTEXT -eq 0 ]; then
     [ $(id --user) -ne 0 ] && echo "[ERROR]: only root is allowed to run this script. use sudo" && exit 1
