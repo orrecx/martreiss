@@ -24,7 +24,7 @@ function archive_artefact ()
 
 
 #-----------------------------------------------
-DOCKER_CONTEXT=0
+[ "x$DOCKER_CONTEXT" = "x" ] && DOCKER_CONTEXT=0
 ERROR=0
 
 case "$1" in

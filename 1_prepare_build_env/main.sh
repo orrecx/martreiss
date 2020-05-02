@@ -4,7 +4,8 @@ cd "$( dirname $(realpath $0))"
 INSTALL=
 CLEAR=
 DISK=
-DOCKER_CONTEXT=0
+
+[ "x$DOCKER_CONTEXT" = "x" ] && DOCKER_CONTEXT=0
 
 #------------------------------------------------
 function _help ()
