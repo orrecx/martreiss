@@ -7,24 +7,18 @@ function install_all_needed_tools ()
   apt-get install -y  bash wget grep gzip binutils-common \
                       bison bzip2 coreutils diffutils \
                       findutils gawk m4 patch perl python3 \
-                      sed tar texinfo xz-utils build-essential
+                      sed tar tree texinfo xz-utils build-essential
 }
 
 function check_tools_version ()
 {
   bash --version | head -n1 | cut -d" " -f2-4
-  MYSH=$(readlink -f /bin/sh)
-  echo "/bin/sh -> $MYSH"
-  echo $MYSH | grep -q bash
-  if [ $? -ne 0 ]; then
-    echo "[ERROR]: /bin/sh does not point to bash"
-    cd /bin
-    ln -v -f -s bash sh
-    cd -
-  fi
-  unset MYSH
+  cd /bin
+  ln -v -f -s bash sh
+  cd -
 
-  echo -n "Binutils: "; ld --version | head -n1 | cut -d" " -f3-
+  echo -n "Binutils: "
+  ld --version | head -n1 | cut -d" " -f3-
   bison --version | head -n1
 
   if [ -h /usr/bin/yacc ]; then
@@ -32,11 +26,13 @@ function check_tools_version ()
   elif [ -x /usr/bin/yacc ]; then
     echo yacc is `/usr/bin/yacc --version | head -n1`
   else
-    echo "[ERROR]: yacc not found" 
+    echo "[ERROR]: yacc not found"
+    exit 102 
   fi
 
   bzip2 --version 2>&1 < /dev/null | head -n1 | cut -d" " -f1,6-
-  echo -n "Coreutils: "; chown --version | head -n1 | cut -d")" -f2
+  echo -n "Coreutils: " 
+  chown --version | head -n1 | cut -d")" -f2
   diff --version | head -n1
   find --version | head -n1
   gawk --version | head -n1
@@ -46,7 +42,8 @@ function check_tools_version ()
   elif [ -x /usr/bin/awk ]; then
     echo awk is `/usr/bin/awk --version | head -n1`
   else 
-    echo "[ERROR]: awk not found" 
+    echo "[ERROR]: awk not found"
+    exit 102 
   fi
 
   gcc --version | head -n1
@@ -68,16 +65,15 @@ function check_tools_version ()
 
 function check_c_compiler ()
 {
-  local ERR=0
   echo 'int main(){}' > dummy.c
   g++ -o dummy dummy.c
   if [ -x dummy ]; then 
     echo "g++ compilation OK"
-  else echo "[ERROR]: g++ compilation failed"
-    ERR=1
+  else 
+    echo "[ERROR]: g++ compilation failed"
+    exit 101
   fi
   rm -f dummy.c dummy &> /dev/null
-  return $ERR
 }
 
 echo "---------------- $0 ---------------------"
@@ -86,5 +82,3 @@ export LC_ALL=C
 install_all_needed_tools
 check_tools_version
 check_c_compiler
-
-exit $?

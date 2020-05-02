@@ -24,12 +24,15 @@ function create_fs_mount_and_populate_fstab ()
 #----- main -----
 echo "---------------- $0 ---------------------"
 [ -z "$LFS" ] && echo "[ERROR]: Environment variable LFS is not set yet." && exit 1
-[ -z "$1" ] && echo "[ERROR]: no disk (ex: /dev/sdb) specified." && exit 2
 [ $(id --user) -ne 0 ] && echo "[ERROR]: only root is allowed to run this script. use sudo" && exit 3
+[ -z "$1" ] && echo "[ERROR]: no disk (ex: /dev/sdb) specified." && exit 2
+
 DSK="$1"
-mkdir -v $LFS
+mkdir -vp $LFS
 chmod o+w -R $LFS
+
 create_partition $DSK
 create_fs_mount_and_populate_fstab  "${DSK}1"
+
 [ ! -e "/root/.bashrc.backup" ] && cp /root/.bashrc /root/.bashrc.backup
 echo "export LFS=$LFS" >> /root/.bashrc
