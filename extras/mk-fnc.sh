@@ -1,7 +1,12 @@
 #!/bin/bash
+
+CD=$(realpath $0)
+CD=$(dirname $CD)
+
+#-----------------------------------------------------
 function _help ()
 {
-    echo "USAGE: $( basename $0 ) -s|--sources <src_dir|file>"
+    echo "USAGE: $( basename $0 ) -s|--sources <src_dir|file> <src_dir|file>..."
 }
 
 function _generate_with_template ()
@@ -10,10 +15,10 @@ function _generate_with_template ()
 	C=$(get_tool $CZ)
 	SK="$DEST/build_$C.sh"
 	echo "generating $SK"
-	cp build_script_template $SK
+	cp $CD/build_script_template $SK
 	chmod +x $SK
 
-	sed -i s/@_COMPONENT_/$1/g $SK
+	sed -i s/"@_COMPONENT_"/$1/g $SK
 }
 
 function _generate ()
@@ -57,46 +62,35 @@ function _generate ()
 	echo	'exit $ERROR' >> $SK
 }
 
+source $CD/../common/utils.sh
 #----------------------------------------------------------
 echo "================ START ================"
-
-CD=$(realpath $0)
-CD=$(dirname $CD)
-cd $CD
-
-source ../common/utils.sh
-
-[ $# -ne 2 ] && _help && exit 1
+[ $# -lt 2 ] && _help && exit 1
 
 SC=
 SRCS=
-DEST="../components"
+DEST="components"
 
-while [ "$1" ]; do
-    case "$1" in
-    -s|--sources)
-		shift 
-		SC="$1" 
-		;;
-    *)   
-		_help
-		exit 1
-		;;
-    esac
-    shift
+case "$1" in
+-s|--sources)
+	shift 
+	;;
+*)   
+	_help
+	exit 1
+	;;
+esac
+
+for SC in "$@"; do
+	[ ! -e "$SC" ] && echo "[ERROR]: $SC file or directory not found" && exit 1
+	if [ -f "$SC" ]; then
+		SRCS="$SRCS $(basename $SC)"
+	else
+		SRCS="$SRCS $(ls -1 $SC)"
+	fi
 done
 
-[ ! -e "$SC" ] && echo "[ERROR]: $SC file or directory not found" && exit 1
-[ ! -d "$DEST" ] && \
-	echo "[ERROR]: destination directory does not exist yet. Create one call 'components'" && \
-	exit 1
-
-if [ -f "$SC" ]; then
-	SRCS="$(basename $SC)"
-else
-	SRCS="$(ls -1 $SC)"
-fi
-
+[ ! -d "$DEST" ] && mkdir -v -p $DEST
 
 for CMPZ in $SRCS; do
 	if [[ "$CMPZ" == *".tar."* ]]; then
