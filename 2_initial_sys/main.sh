@@ -1,7 +1,5 @@
 #!/bin/bash
-CD=$(realpath $0)
-CD=$(dirname $CD)
-cd $CD
+cd "$( dirname $(realpath $0))"
 
 #---------------------------------------------
 function delete_unecessary_files ()
@@ -33,7 +31,12 @@ case "$1" in
 --docker) DOCKER_CONTEXT=1 ;;
 esac
 
+export DOCKER_CONTEXT
 source ../common/config.sh
+source ../common/utils.sh
+
+s_start $0
+START_TIME=$?
 
 if [ $DOCKER_CONTEXT -eq 0 ]; then
     U="lfs"
@@ -50,7 +53,14 @@ fi
 echo "================ MAIN: CONSTRUCT INITIAL SYSTEM ================"
 if [ $DOCKER_CONTEXT -eq 0 ]; then
     export MAKEFLAGS='-j 2'
-    env -i HOME=$HOME TERM=$TERM LFS=$LFS LFS_TGT=$LFS_TGT PATH=$PATH 'PS1=(limited)\u:\w\$' /bin/bash -c ./build.sh
+    env -i DOCKER_CONTEXT=$DOCKER_CONTEXT \
+    HOME=$HOME \
+    TERM=$TERM \
+    LFS=$LFS \
+    LFS_TGT=$LFS_TGT \
+    PATH=$PATH \
+    'PS1=(limited)\u:\w\$' \
+    /bin/bash -c ./build.sh
     ERROR=$?
 else
     ./build.sh
@@ -63,5 +73,9 @@ if [ $ERROR -eq 0 ]; then
 else
     echo "[ERROR]: build failed"
 fi
+
+s_end $0
+END_TIME=$?
+s_duration $0 $START_TIME $END_TIME 
 
 exit $ERROR

@@ -28,12 +28,16 @@ while [ "$1" ]; do
     shift
 done
 
+export DOCKER_CONTEXT
 source ../common/config.sh
 source ../common/utils.sh
 
+s_start $0
+START_TIME=$?
+
 if [ $DOCKER_CONTEXT -eq 0 ]; then
     [ $(id --user) -ne 0 ] && echo "[ERROR]: only root is allowed to run this script. use sudo" && exit 1
-    [ ! -b "$DISK" ] && echo "[ERROR]: specified --disk '$DISK' is not a block-special file" && exit 4
+    [ ! -b "$DISK" ] && echo "[ERROR]: specified --disk '$DISK' is not a block-special file" && _help && exit 4
 fi
 
 if [ $DOCKER_CONTEXT -eq 0 ]; then
@@ -67,3 +71,7 @@ else
     ./1_install_essential_tools.sh
     ./3_get_sources.sh
 fi
+
+s_end $0
+END_TIME=$?
+s_duration $0 $START_TIME $END_TIME 
