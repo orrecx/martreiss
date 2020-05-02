@@ -10,7 +10,7 @@ function _generate_with_template ()
 	C=$(get_tool $CZ)
 	SK="$DEST/build_$C.sh"
 	echo "generating $SK"
-	cp $DEST/build_script_template $SK
+	cp build_script_template $SK
 	chmod +x $SK
 
 	sed -i s/@_COMPONENT_/$1/g $SK
@@ -57,16 +57,20 @@ function _generate ()
 	echo	'exit $ERROR' >> $SK
 }
 
-source common/utils.sh
 #----------------------------------------------------------
 echo "================ START ================"
+
+CD=$(realpath $0)
+CD=$(dirname $CD)
+cd $CD
+
+source ../common/utils.sh
 
 [ $# -ne 2 ] && _help && exit 1
 
 SC=
-SRC_DIR=
 SRCS=
-DEST="$(pwd)/components"
+DEST="../components"
 
 while [ "$1" ]; do
     case "$1" in
