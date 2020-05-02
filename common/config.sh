@@ -32,4 +32,6 @@ if [ -z "$UTILS" ]; then
     UTILS="common"
 fi
 
+BACKYARD="backyard"
+
 export LFS LFS_TGT SOURCES_DIR TOOLS_SLINK TOOLS_DIR COMPONENTS_DIR UTILS

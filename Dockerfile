@@ -5,6 +5,7 @@ COPY 1_prepare_build_env ${WRK}/1_prepare_build_env
 COPY 2_tmp_sys ${WRK}/2_tmp_sys
 COPY common ${WRK}/common
 COPY build_in_container ${WRK}/build_in_container
+COPY backyard ${WRK}/backyard
 WORKDIR ${WRK}
 #RUN ./build_in_container/1_build_tmp_sys.sh
 CMD [ "./build_in_container/1_build_tmp_sys.sh" ]
