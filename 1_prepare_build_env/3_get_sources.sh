@@ -15,6 +15,7 @@ chmod -v a+wt $SRC
 ln -sv $TOOLS_DIR /
 
 if [ -f "../$BACKYARD/sources.tar.gz" ]; then
+    echo "found sources.tar.gz in directory $BACKYARD"
     pushd ../$BACKYARD
     tar xzf sources.tar.gz
     mv -v sources/* $SRC

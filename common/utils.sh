@@ -9,18 +9,14 @@ function run_cmd ()
 function s_start ()
 {
     local START_TIME=$(date +"%s")
-    echo "---------- START: $1 -----------"
-    echo "START: $(date -d@$START_TIME -u +%H:%M:%S)"
-    echo "-----------------------"
+    echo "---------- START: $1  [ $(date -d@$START_TIME -u +%H:%M:%S) ] -----------"
     return $START_TIME
 }
 
 function s_end ()
 {
     local END_TIME=$(date +"%s")
-    echo "---------END: $0 --------------"
-    echo "END: $(date -d@$END_TIME -u +%H:%M:%S)"
-    echo "-----------------------"
+    echo "---------END: $1  [ $(date -d@$END_TIME -u +%H:%M:%S) ] --------------"
     return $END_TIME
 }
 
