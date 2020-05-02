@@ -4,15 +4,11 @@ ERROR=0
 
 function _build () 
 {
-	local ERR=0
-	./configure --prefix=$TOOLS_SLINK
-	make
-	if [ "$1" == "--test" ]; then
-		make check
-		ERR=$?
-	fi
-	[ $ERR -eq 0 ] && make install || echo "[ERROR]: build failed"
-	return $ERR
+    sh Configure -des -Dprefix=$TOOLS_SLINK -Dlibs=-lm -Uloclibpth -Ulocincpth
+    make
+    cp -v perl cpan/podlators/scripts/pod2man $TOOLS_SLINK/bin
+    mkdir -pv $TOOLS_SLINK/lib/perl5/5.30.1
+    cp -Rv lib/* $TOOLS_SLINK/lib/perl5/5.30.1
 }
 
 source ../common/config.sh

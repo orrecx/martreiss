@@ -5,13 +5,19 @@ ERROR=0
 function _build () 
 {
 	local ERR=0
-	./configure --prefix=$TOOLS_SLINK
+	./configure --prefix=$TOOLS_SLINK --without-bash-malloc
 	make
 	if [ "$1" == "--test" ]; then
-		make check
+		make test
 		ERR=$?
 	fi
-	[ $ERR -eq 0 ] && make install || echo "[ERROR]: build failed"
+
+	if [ $ERR -eq 0 ]; then 
+		make install
+		ln -sv bash /tools/bin/sh
+	else
+		echo "[ERROR]: build failed"
+	fi
 	return $ERR
 }
 
@@ -26,7 +32,7 @@ cd $SRC
 TG=$( extract $COMP )
 cd $TG
 
-_build
+_build #--test #ignore for now
 ERROR=$?
 
 cd $SRC

@@ -4,15 +4,10 @@ ERROR=0
 
 function _build () 
 {
-	local ERR=0
-	./configure --prefix=$TOOLS_SLINK
-	make
-	if [ "$1" == "--test" ]; then
-		make check
-		ERR=$?
-	fi
-	[ $ERR -eq 0 ] && make install || echo "[ERROR]: build failed"
-	return $ERR
+    sed -i '/def add_multiarch_paths/a \        return' setup.py
+    ./configure --prefix=$TOOLS_SLINK --without-ensurepip
+    make
+    make install
 }
 
 source ../common/config.sh

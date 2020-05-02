@@ -5,7 +5,7 @@ ERROR=0
 function _build () 
 {
 	local ERR=0
-	./configure --prefix=$TOOLS_SLINK
+	./configure --prefix=$TOOLS_SLINK "--without-guile"
 	make
 	if [ "$1" == "--test" ]; then
 		make check

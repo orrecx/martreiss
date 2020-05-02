@@ -5,6 +5,8 @@ ERROR=0
 function _build () 
 {
 	local ERR=0
+    sed -i 's/IO_ftrylockfile/IO_EOF_SEEN/' lib/*.c
+    echo "#define _IO_IN_BACKUP 0x100" >> lib/stdio-impl.h
 	./configure --prefix=$TOOLS_SLINK
 	make
 	if [ "$1" == "--test" ]; then
@@ -26,7 +28,7 @@ cd $SRC
 TG=$( extract $COMP )
 cd $TG
 
-_build
+_build #--test #ignore test for now
 ERROR=$?
 
 cd $SRC

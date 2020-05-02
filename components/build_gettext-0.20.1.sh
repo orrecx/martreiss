@@ -4,15 +4,9 @@ ERROR=0
 
 function _build () 
 {
-	local ERR=0
-	./configure --prefix=$TOOLS_SLINK
-	make
-	if [ "$1" == "--test" ]; then
-		make check
-		ERR=$?
-	fi
-	[ $ERR -eq 0 ] && make install || echo "[ERROR]: build failed"
-	return $ERR
+    ./configure --disable-shared
+    make
+    cp -v gettext-tools/src/{msgfmt,msgmerge,xgettext} /$TOOLS_SLINK/bin
 }
 
 source ../common/config.sh

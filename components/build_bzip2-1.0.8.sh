@@ -4,15 +4,13 @@ ERROR=0
 
 function _build () 
 {
-	local ERR=0
-	./configure --prefix=$TOOLS_SLINK
-	make
-	if [ "$1" == "--test" ]; then
-		make check
-		ERR=$?
-	fi
-	[ $ERR -eq 0 ] && make install || echo "[ERROR]: build failed"
-	return $ERR
+    make -f Makefile-libbz2_so
+    make clean
+    make
+    make PREFIX=$TOOLS_SLINK install
+    cp -v bzip2-shared $TOOLS_SLINK/bin/bzip2
+    cp -av libbz2.so* $TOOLS_SLINK/lib
+    ln -sv libbz2.so.1.0 $TOOLS_SLINK/lib/libbz2.so    
 }
 
 source ../common/config.sh

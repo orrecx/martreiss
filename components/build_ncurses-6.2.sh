@@ -4,15 +4,16 @@ ERROR=0
 
 function _build () 
 {
-	local ERR=0
-	./configure --prefix=$TOOLS_SLINK
+	sed -i s/mawk// configure
+	./configure --prefix=$TOOLS_SLINK  \
+            --with-shared   \
+            --without-debug \
+            --without-ada   \
+            --enable-widec  \
+            --enable-overwrite	
 	make
-	if [ "$1" == "--test" ]; then
-		make check
-		ERR=$?
-	fi
-	[ $ERR -eq 0 ] && make install || echo "[ERROR]: build failed"
-	return $ERR
+	make install
+    ln -s libncursesw.so /tools/lib/libncurses.so
 }
 
 source ../common/config.sh
@@ -27,7 +28,6 @@ TG=$( extract $COMP )
 cd $TG
 
 _build
-ERROR=$?
 
 cd $SRC
 rm -v -rf $TG
