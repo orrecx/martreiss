@@ -4,11 +4,11 @@ ERROR=0
 
 function _build () 
 {
-	local ERR=0
+    local ERR=0
     mkdir -v build
     cd build
 
-	./configure --prefix=$TOOLS_SLINK 		\
+	../configure --prefix=$TOOLS_SLINK 		\
                  --with-sysroot=$LFS        \
                  --with-lib-path=/tools/lib \
                  --target=$LFS_TGT          \
