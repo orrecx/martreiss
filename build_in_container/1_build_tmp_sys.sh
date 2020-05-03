@@ -10,8 +10,8 @@ set +h
 DOCKER_CONTEXT=1
 export DOCKER_CONTEXT
 
-../common/config.sh
-../common/utils.sh
+source ../common/config.sh
+source ../common/utils.sh
 
 LC_ALL=POSIX
 PATH="$TOOLS_SLINK/bin:/bin:/usr/bin"
