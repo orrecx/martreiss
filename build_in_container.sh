@@ -20,6 +20,7 @@ function _build_basic_image ()
     local ERR=0
     docker images --format "{{.Repository}}:{{.Tag}}" | grep "$BASIS_IMG:$BASIS_IMG_TAG"
     if [ $? -ne 0 ]; then
+        echo "-------------- building image $BASIS_IMG:$BASIS_IMG_TAG ------------- "
         pushd prebuild
         docker build -t $BASIS_IMG:$BASIS_IMG_TAG -f Dockerfile_basicImage .
         ERR=$?
@@ -31,6 +32,7 @@ function _build_basic_image ()
 
 function _build_image ()
 {
+    echo "-------------- building image $CN:$TAG ------------- "
     local ERR=0
     _build_basic_image
     ERR=$?
