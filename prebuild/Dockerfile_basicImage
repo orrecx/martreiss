@@ -1,0 +1,9 @@
+FROM ubuntu:eoan
+RUN apt-get update && \
+  apt-get install -y  bash grep gzip binutils-common \
+                      bison bzip2 coreutils diffutils \
+                      findutils gawk m4 patch perl python3 \
+                      sed tar texinfo xz-utils build-essential \
+                      tree htop wget nano
+
+CMD [ "" ]

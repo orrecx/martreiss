@@ -1,4 +1,5 @@
-FROM ubuntu:eoan as mini_sys
+ARG baseimage="ubuntu:eoan"
+FROM ${baseimage} as mini_sys
 ENV WRK="/workspace" LFS="/lfs" DOCKER_CONTEXT=1
 RUN mkdir -pv ${LFS}/results ${WRK}
 COPY 1_prepare_build_env ${WRK}/1_prepare_build_env
