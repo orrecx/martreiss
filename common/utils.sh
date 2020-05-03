@@ -9,21 +9,21 @@ function run_cmd ()
 function s_start ()
 {
     local START_TIME=$(date +"%s")
-    echo "---------- START: $1  [ $(date -d@$START_TIME -u +%H:%M:%S) ] -----------"
+    echo "$(date -d@$START_TIME -u +%H:%M:%S): START: $0 -------------- ---------------- ----------"
     return $START_TIME
 }
 
 function s_end ()
 {
     local END_TIME=$(date +"%s")
-    echo "---------END: $1  [ $(date -d@$END_TIME -u +%H:%M:%S) ] --------------"
+    echo "$(date -d@$END_TIME -u +%H:%M:%S): END: $0 -------------- ---------------- ----------"
     return $END_TIME
 }
 
 function s_duration ()
 {
     local DURATION=$(expr $3 - $2)
-    echo "$0 build time: $(date -d@$DURATION -u +%H:%M:%S) "
+    echo "[BUILD DURATION] $0 : $(date -d@$DURATION -u +%H:%M:%S)"
     return $DURATION
 }
 
