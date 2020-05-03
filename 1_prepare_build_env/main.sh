@@ -33,6 +33,10 @@ export DOCKER_CONTEXT
 source ../common/config.sh
 source ../common/utils.sh
 
+echo "-----------"
+env
+echo "-----------"
+
 s_start $0
 START_TIME=$?
 

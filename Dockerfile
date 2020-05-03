@@ -1,4 +1,5 @@
 ARG baseimage="ubuntu:eoan"
+
 FROM ${baseimage} as mini_sys
 ENV WRK="/workspace" LFS="/lfs" DOCKER_CONTEXT=1
 RUN mkdir -pv ${LFS}/results ${WRK}

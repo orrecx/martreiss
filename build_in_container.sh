@@ -3,12 +3,11 @@ cd "$( dirname $(realpath $0))"
 
 BUILD=
 RUN=
-CN="matrissys"
-TAG="v1.0"
 VOL="$(pwd)/lfs_volume"
 
+CN="matrissys"
 BASIS_IMG="build-env-basic"
-BASIS_IMG_TAG="v1.0"
+IMG_TAG="v1.1"
 
 function _help ()
 {
@@ -18,13 +17,13 @@ function _help ()
 function _build_basic_image ()
 {
     local ERR=0
-    docker images --format "{{.Repository}}:{{.Tag}}" | grep "$BASIS_IMG:$BASIS_IMG_TAG"
+    docker images --format "{{.Repository}}:{{.Tag}}" | grep "$BASIS_IMG:$IMG_TAG"
     if [ $? -ne 0 ]; then
-        echo "-------------- building image $BASIS_IMG:$BASIS_IMG_TAG ------------- "
+        echo "-------------- building image $BASIS_IMG:$IMG_TAG ------------- "
         pushd prebuild
-        docker build -t $BASIS_IMG:$BASIS_IMG_TAG -f Dockerfile_basicImage .
+        docker build -t $BASIS_IMG:$IMG_TAG -f Dockerfile_basicImage .
         ERR=$?
-        [ $ERR -ne 0 ] && echo "building $BASIS_IMG:$BASIS_IMG_TAG failed"
+        [ $ERR -ne 0 ] && echo "building $BASIS_IMG:$IMG_TAG failed"
         popd    
     fi 
     return $ERR
@@ -32,13 +31,13 @@ function _build_basic_image ()
 
 function _build_image ()
 {
-    echo "-------------- building image $CN:$TAG ------------- "
+    echo "-------------- building image $CN:$IMG_TAG ------------- "
     local ERR=0
     _build_basic_image
     ERR=$?
     [ $ERR -ne 0 ] && return $ERR 
-    docker rmi $CN:$TAG 2> /dev/null       
-    docker build --build-arg baseimage="$BASIS_IMG:$BASIS_IMG_TAG" -t $CN:$TAG .
+    docker rmi $CN:$IMG_TAG 2> /dev/null       
+    docker build --build-arg baseimage="$BASIS_IMG:$IMG_TAG" -t $CN:$IMG_TAG .
     return 0
 }
 
@@ -48,16 +47,13 @@ function _run_container ()
     [ -d "$VOL.backup" ] && rm -rvf $VOL.backup
     [ -d "$VOL" ] && mv -v $VOL $VOL.backup
     mkdir  -v $VOL
-    docker run -v $VOL:/lfs/results --name $CN  $CN:$TAG "$@"
+    docker run -v $VOL:/lfs/results --name $CN  $CN:$IMG_TAG "$@"
     return $?
 }
 
 #----------------------------------------------------------
-[ $# -eq 0 ] && _help && exit 1
 echo "================ START ================"
-CD=$(realpath $0)
-CD=$(dirname $CD)
-cd $CD
+[ $# -eq 0 ] && _help && exit 1
 
 while [ "x$1" != "x" ]; do
     case $1 in

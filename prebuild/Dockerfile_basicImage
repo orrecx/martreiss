@@ -4,6 +4,6 @@ RUN apt-get update && \
                       bison bzip2 coreutils diffutils \
                       findutils gawk m4 patch perl python3 \
                       sed tar texinfo xz-utils build-essential \
-                      tree htop wget nano
+                      tree htop wget nano psmisc
 
 CMD [ "" ]
