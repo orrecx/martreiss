@@ -11,17 +11,27 @@ function delete_unecessary_files ()
     #rm -v -rf $LFS/tools/{,share}/{info,man,doc}
 }
 
-function archive_artefact ()
+function archive_tmp_sys ()
 {
-    echo "archive_artefact: $LFS/tools and $LFS/sources"
+    echo "archiving tmp_sys to $LFS/results/tools.tar.gz"
     cd $LFS
     tar cf  $LFS/results/tools.tar tools
     gzip -v $LFS/results/tools.tar
-    tar cf  $LFS/results/sources.tar sources
-    gzip -v $LFS/results/sources.tar
     cd -
 }
 
+function archive_sources ()
+{    
+    if [ ! -e "$(pwd)/../$BACKYARD/sources.tar.gz" ]; then
+        echo "archiving sources to $LFS/results/sources.tar.gz"
+        cd $LFS
+        tar cf  $LFS/results/sources.tar sources
+        gzip -v $LFS/results/sources.tar
+        cd -
+    else
+        echo "archiving sources not needed"
+    fi
+}
 
 #-----------------------------------------------
 [ "x$DOCKER_CONTEXT" = "x" ] && DOCKER_CONTEXT=0
@@ -69,10 +79,12 @@ fi
 
 if [ $ERROR -eq 0 ]; then
     #delete_unecessary_files
-    archive_artefact
+    archive_tmp_sys
 else
     echo "[ERROR]: build failed"
 fi
+
+archive_sources
 
 s_end $0
 END_TIME=$?

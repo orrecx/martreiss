@@ -91,8 +91,12 @@ function _build_ext ()
       touch $file.orig
     done
 
-    sed -e '/m64=/s/lib64/lib/' \
-            -i.orig gcc/config/i386/t-linux64
+    case $(uname -m) in
+      x86_64)
+        sed -e '/m64=/s/lib64/lib/' \
+        -i.orig gcc/config/i386/t-linux64
+        ;;
+    esac
 
     tar -xf ../mpfr-4.0.2.tar.xz
     mv -v mpfr-4.0.2 mpfr
@@ -112,9 +116,9 @@ function _build_ext ()
     AR=$LFS_TGT-ar                                     \
     RANLIB=$LFS_TGT-ranlib                             \
     ../configure                                       \
-        --prefix=/tools                                \
-        --with-local-prefix=/tools                     \
-        --with-native-system-header-dir=/tools/include \
+        --prefix=$TOOLS_SLINK                                \
+        --with-local-prefix=$TOOLS_SLINK                     \
+        --with-native-system-header-dir=$TOOLS_SLINK/include \
         --enable-languages=c,c++                       \
         --disable-libstdcxx-pch                        \
         --disable-multilib                             \
@@ -123,7 +127,7 @@ function _build_ext ()
 
     make
     make install
-    ln -sv gcc /tools/bin/cc
+    ln -sv gcc $TOOLS_SLINK/bin/cc
 
 	if [ "$1" == "--test" ]; then
 	    #sanitiy check: check if compiling and linking works as expected
