@@ -1,4 +1,5 @@
 #!/bin/bash
+cd "$( dirname $(realpath $0))"
 
 BUILD_SCRIPTS_DIR="vfs_scripts"
 SYS_CONF_SCRIPTS_DIR="vfs_config_scripts"
@@ -49,7 +50,12 @@ function bind_bootdir_from_host_to_lfs_env ()
     mount --bind /boot /mnt/lfs/boot
 }
 
+source ../common/config.sh
+source ../common/utils.sh
 #------------------------ main ------------------------
+s_start $0
+START_TIME=$?
+
 [ -z "$1" ] && echo "[ERROR]:" && _help && exit 3
 while [ "$1" ]; do
     case "$1" in
@@ -70,11 +76,7 @@ if [ $DOCKER_CONTEXT -eq 0 ]; then
     echo "[ERROR]: Environment variable LFS is not set yet or directory $LFS does not exist yet" && exit 2
 fi
 
-echo "================ MAIN: CONSTRUCT SYSTEM ================"
-CD=$(realpath $0)
-CD=$(dirname $CD)
-cd $CD
-
+echo "================ CONSTRUCT BASIC SYSTEM ================"
 if [ $CLEAR -eq 1 ] ; then
     _clear
 fi
@@ -103,3 +105,9 @@ if [ $DOCKER_CONTEXT -eq 1 ] ; then
     cp -f -v profile /root/.profile
     ./$SYS_CONF_SCRIPTS_DIR/sys_config_main.sh
 fi
+
+s_end $0
+END_TIME=$?
+s_duration $0 $START_TIME $END_TIME 
+
+exit 0

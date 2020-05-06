@@ -1,29 +1,20 @@
 #!/bin/bash
+echo "####################################################"  | tee    $LFS/results/build.log
+echo "#         BUILD BASIC_SYS IN DOCKER CONTAINER      #"  | tee -a $LFS/results/build.log
+echo "####################################################"  | tee -a $LFS/results/build.log
+cd "$( dirname $(realpath $0))"
 
-function _archive ()
-{
-    tar --exclude="/lfs"        \
-        --exclude="/tools"      \
-        --exclude="/sources"    \
-        --exclude="/workspace"  \
-        -cf /lfs/results/matrissys.tar /*
+hash -r
+set +h
 
-    gzip /lfs/results/matrissys.tar
-}
+DOCKER_CONTEXT=1
+export DOCKER_CONTEXT
 
-echo "####################################################"
-echo "#             BUILD BASIC_SYS ON DOCKER            #"
-echo "####################################################"
+source ../common/config.sh
+source ../common/utils.sh
 
 LC_ALL=POSIX
 PATH="$PATH:/tools/$(uname -m)-pc-linux-gnu/bin"
 export LC_ALL PATH
 
-CD=$(realpath $0)
-CD=$(dirname $CD)
-cd $CD
-
-./main.sh --docker
-#_archive
-
-#rm -rf /workspace /tools /sources &> /dev/null
+../3_base_sys/main.sh --docker
