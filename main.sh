@@ -59,8 +59,9 @@ function _run_container ()
 echo "================ START ================"
 IN_CONT=0
 ON_HOST=0
+ERR=0
 
-[ $# -eq 0 ] && _help && exit 1
+[ $# -eq 0 ] && echo "[ERROR]: missing inputs"
 
 case $1 in
     container) IN_CONT=1 ;;
@@ -74,17 +75,22 @@ if [ $IN_CONT -eq 1 ]; then
     CN="matrissys"
     BASIS_IMG="build-env-basic"
     IMG_TAG="v1.1"
+    STOP=0
 
-    while [ "x$1" != "x" ]; do
+    [ $# -eq 0 ] && echo "[ERROR]: missing options" && _help_container
+
+    while [ "x$1" != "x" -a $STOP -eq 0 ]; do
         case $1 in
         -b|--build)
             _build_image
-            exit $?
+            ERR=$?
+            STOP=1
             ;;
         -r|--run)
             shift
             _run_container "$@"
-            exit $?
+            ERR=$?
+            STOP=1
             ;;
         -a|--all)
             shift
@@ -96,21 +102,23 @@ if [ $IN_CONT -eq 1 ]; then
             else
                 echo "[ERROR]: building image failed"
             fi
-            exit $ERR
+            STOP=1
             ;;
         *)
             _help_container
-            exit 1
+            ERR=1
+            STOP=1
             ;;
         esac
         shift
     done
 elif [ $ON_HOST -eq 1 ]; then
     echo "not supported yet"
-    exit 1
+    ERR=1
 else
     _help
-    exit 1
+    ERR=1
 fi
 
 echo "================ END ================"
+exit $ERR
