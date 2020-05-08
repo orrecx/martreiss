@@ -12,28 +12,6 @@ function _help ()
     echo "USAGE: $(basename $0) -c|--clear|-b|--build" 
 }
 
-function _clear ()
-{
-    umount -v $LFS/proc
-    umount -v $LFS/run
-    umount -v $LFS/sys
-    umount -v $LFS/dev/pts
-    umount -v $LFS/dev
-    rm -v -f $LFS/dev/console
-    rm -v -f $LFS/dev/null
-    rm -v -rf $LFS/{dev,proc,sys,run}
-    rm -v -rf $LFS/{boot,etc,home,lib,mnt,opt}
-    rm -v -rf $LFS/{media,sbin,srv,var,usr,tmp,root,bin}
-    case $(uname -m) in
-        x86_64) rm -v -rf $LFS/lib64 ;;
-    esac
-
-    mv -v  $LFS/tools/bin/{ld-old, ld}
-    mv -v  $LFS/tools/$(uname -m)-pc-linux-gnu/bin/{ld-old, ld}
-    ln -v -s -f $LFS/tools/bin/ld /tools/$(uname -m)-pc-linux-gnu/bin/ld
-
-}
-
 function run_in_lfs_env ()
 {
     chroot "$LFS" /tools/bin/env -i \
@@ -99,8 +77,8 @@ if [ $BUILD -eq 1 ] ; then
 fi
 
 if [ $DOCKER_CONTEXT -eq 1 ] ; then
-    ./1_create_virtual_fs.sh --docker
-    ./$BUILD_SCRIPTS_DIR/vfs_main.sh      
+    ./1_create_virtual_fs.sh
+    ./build_components.sh      
     cp -f -v bashrc /root/.bashrc
     cp -f -v profile /root/.profile
     ./$SYS_CONF_SCRIPTS_DIR/sys_config_main.sh
