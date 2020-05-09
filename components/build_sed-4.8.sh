@@ -15,6 +15,27 @@ function _build ()
 	return $ERR
 }
 
+function _build_ext ()
+{
+	local ERR=0
+    sed -i 's/usr/tools/'                 build-aux/help2man
+    sed -i 's/testsuite.panic-tests.sh//' Makefile.in
+    ./configure --prefix=/usr --bindir=/bin
+    make
+    make html
+	if [ "$1" == "--test" ]; then
+		make check
+		ERR=$?
+		[ $ERR -ne 0 ] && echo "[ERROR]: test failed"
+	fi
+
+    make install
+    install -d -m755           /usr/share/doc/sed-4.8
+    install -m644 doc/sed.html /usr/share/doc/sed-4.8
+
+    return $ERR
+}
+
 source ../common/config.sh
 source ../common/utils.sh
 #----------------------------------------
@@ -26,8 +47,16 @@ cd $SRC
 TG=$( extract $COMP )
 cd $TG
 
-_build
-ERROR=$?
+case "$1" in
+    --ext)
+    _build_ext --test
+	ERROR=$?
+    ;;
+    *)
+    _build
+	ERROR=$?
+    ;;
+esac
 
 cd $SRC
 rm -v -rf $TG

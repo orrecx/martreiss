@@ -56,8 +56,11 @@ fi
 
 echo "================ CONSTRUCT BASIC SYSTEM ================"
 if [ $CLEAR -eq 1 ] ; then
-    _clear
+    ./cleanup.sh
 fi
+
+hash -r
+set +h
 
 if [ $BUILD -eq 1 ] ; then
     ./1_create_virtual_fs.sh
@@ -78,10 +81,9 @@ fi
 
 if [ $DOCKER_CONTEXT -eq 1 ] ; then
     ./1_create_virtual_fs.sh
-    ./build_components.sh      
-    cp -f -v bashrc /root/.bashrc
-    cp -f -v profile /root/.profile
-    ./$SYS_CONF_SCRIPTS_DIR/sys_config_main.sh
+    ./2_install_config_files.sh
+    ./build_components.sh
+    
 fi
 
 s_end $0

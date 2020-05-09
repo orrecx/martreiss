@@ -4,15 +4,15 @@ ERROR=0
 
 function _build () 
 {
-	local ERR=0
-	./configure --prefix=$TOOLS_SLINK
-	make
-	if [ "$1" == "--test" ]; then
-		make check
-		ERR=$?
-	fi
-	[ $ERR -eq 0 ] && make install || echo "[ERROR]: build failed"
-	return $ERR
+    echo '#define SYS_VIMRC_FILE "/etc/vimrc"' >> src/feature.h
+    ./configure --prefix=/usr
+    make
+    make install
+    ln -sv vim /usr/bin/vi
+    for L in  /usr/share/man/{,*/}man1/vim.1; do
+        ln -sv vim.1 $(dirname $L)/vi.1
+    done
+    ln -sv ../vim/vim82/doc /usr/share/doc/vim-8.2.0190
 }
 
 source ../common/config.sh
@@ -27,7 +27,6 @@ TG=$( extract $COMP )
 cd $TG
 
 _build
-ERROR=$?
 
 cd $SRC
 rm -v -rf $TG

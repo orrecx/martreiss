@@ -5,13 +5,23 @@ ERROR=0
 function _build () 
 {
 	local ERR=0
-	./configure --prefix=$TOOLS_SLINK
-	make
+    ./configure --prefix=/usr     \
+                --bindir=/bin     \
+                --disable-static  \
+                --sysconfdir=/etc \
+                --docdir=/usr/share/doc/attr-2.4.48
+    make
+
 	if [ "$1" == "--test" ]; then
 		make check
 		ERR=$?
+		[ $ERR -ne 0 ] && echo "[ERROR]: test failed"
 	fi
-	[ $ERR -eq 0 ] && make install || echo "[ERROR]: build failed"
+	
+	make install
+    mv -v /usr/lib/libattr.so.* /lib
+    ln -sfv ../../lib/$(readlink /usr/lib/libattr.so) /usr/lib/libattr.so
+
 	return $ERR
 }
 

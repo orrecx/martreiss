@@ -5,13 +5,19 @@ ERROR=0
 function _build () 
 {
 	local ERR=0
-	./configure --prefix=$TOOLS_SLINK
-	make
+    sed -i 's|usr/bin/env |bin/|' run.sh.in
+    ./configure --prefix=/usr    \
+                --disable-static \
+                --docdir=/usr/share/doc/expat-2.2.9
+    make
 	if [ "$1" == "--test" ]; then
 		make check
 		ERR=$?
+		[ $ERR -ne 0 ] && echo "[ERROR]: test failed"
 	fi
-	[ $ERR -eq 0 ] && make install || echo "[ERROR]: build failed"
+
+    make install
+    install -v -m644 doc/*.{html,png,css} /usr/share/doc/expat-2.2.9
 	return $ERR
 }
 
@@ -26,7 +32,7 @@ cd $SRC
 TG=$( extract $COMP )
 cd $TG
 
-_build
+_build --test
 ERROR=$?
 
 cd $SRC

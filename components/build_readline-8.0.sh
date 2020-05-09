@@ -2,17 +2,23 @@
 cd "$( dirname $(realpath $0))"
 ERROR=0
 
-function _build () 
+function _build ()
 {
-	local ERR=0
-	./configure --prefix=$TOOLS_SLINK
-	make
-	if [ "$1" == "--test" ]; then
-		make check
-		ERR=$?
-	fi
-	[ $ERR -eq 0 ] && make install || echo "[ERROR]: build failed"
-	return $ERR
+	sed -i '/MV.*old/d' Makefile.in
+	sed -i '/{OLDSUFF}/c:' support/shlib-install
+	./configure --prefix=/usr    \
+	            --disable-static \
+	            --docdir=/usr/share/doc/readline-8.0
+
+	make SHLIB_LIBS="-L/tools/lib -lncursesw"
+	make SHLIB_LIBS="-L/tools/lib -lncursesw" install
+
+	mv -v /usr/lib/lib{readline,history}.so.* /lib
+	chmod -v u+w /lib/lib{readline,history}.so.*
+	ln -sfv ../../lib/$(readlink /usr/lib/libreadline.so) /usr/lib/libreadline.so
+	ln -sfv ../../lib/$(readlink /usr/lib/libhistory.so ) /usr/lib/libhistory.so
+
+	install -v -m644 doc/*.{ps,pdf,html,dvi} /usr/share/doc/readline-8.0
 }
 
 source ../common/config.sh
@@ -26,8 +32,7 @@ cd $SRC
 TG=$( extract $COMP )
 cd $TG
 
-_build
-ERROR=$?
+_build_ext
 
 cd $SRC
 rm -v -rf $TG

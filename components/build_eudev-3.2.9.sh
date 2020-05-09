@@ -5,13 +5,29 @@ ERROR=0
 function _build () 
 {
 	local ERR=0
-	./configure --prefix=$TOOLS_SLINK
-	make
-	if [ "$1" == "--test" ]; then
+    mkdir -pv /lib/udev/rules.d
+    mkdir -pv /etc/udev/rules.d
+
+    ./configure --prefix=/usr           \
+                --bindir=/sbin          \
+                --sbindir=/sbin         \
+                --libdir=/usr/lib       \
+                --sysconfdir=/etc       \
+                --libexecdir=/lib       \
+                --with-rootprefix=      \
+                --with-rootlibdir=/lib  \
+                --enable-manpages       \
+                --disable-static
+    make
+ 	if [ "$1" == "--test" ]; then
 		make check
 		ERR=$?
+		[ $ERR -ne 0 ] && echo "[ERROR]: test failed"
 	fi
-	[ $ERR -eq 0 ] && make install || echo "[ERROR]: build failed"
+	make install
+    tar -xvf ../udev-lfs-20171102.tar.xz
+    make -f udev-lfs-20171102/Makefile.lfs install
+    udevadm hwdb --update
 	return $ERR
 }
 
@@ -26,7 +42,7 @@ cd $SRC
 TG=$( extract $COMP )
 cd $TG
 
-_build
+_build --test
 ERROR=$?
 
 cd $SRC

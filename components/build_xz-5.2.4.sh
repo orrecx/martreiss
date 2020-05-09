@@ -15,6 +15,18 @@ function _build ()
 	return $ERR
 }
 
+function _build_ext ()
+{
+    ./configure --prefix=/usr    \
+                --disable-static \
+                --docdir=/usr/share/doc/xz-5.2.4
+    make
+    make install
+    mv -v   /usr/bin/{lzma,unlzma,lzcat,xz,unxz,xzcat} /bin
+    mv -v /usr/lib/liblzma.so.* /lib
+    ln -svf ../../lib/$(readlink /usr/lib/liblzma.so) /usr/lib/liblzma.so
+}
+
 source ../common/config.sh
 source ../common/utils.sh
 #----------------------------------------
@@ -26,8 +38,15 @@ cd $SRC
 TG=$( extract $COMP )
 cd $TG
 
-_build
-ERROR=$?
+case "$1" in
+	--ext)
+	_build_ext
+	;;
+	*)
+	_build
+	ERROR=$?
+	;;
+esac
 
 cd $SRC
 rm -v -rf $TG

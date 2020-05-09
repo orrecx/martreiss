@@ -15,6 +15,27 @@ function _build ()
 	return $ERR
 }
 
+function _build_ext ()
+{
+	local ERR=0
+    ./configure --prefix=/usr --disable-static
+    make
+ 	if [ "$1" == "--test" ]; then
+		make check
+		ERR=$?
+		[ $ERR -ne 0 ] && echo "[ERROR]: test failed"
+	fi
+    make install
+    make TEXMF=/usr/share/texmf install-tex
+    pushd /usr/share/info
+    rm -v dir
+    for f in *
+      do install-info $f dir 2>/dev/null
+    done
+    popd
+	return $ERR
+}
+
 source ../common/config.sh
 source ../common/utils.sh
 #----------------------------------------
@@ -26,8 +47,16 @@ cd $SRC
 TG=$( extract $COMP )
 cd $TG
 
-_build
-ERROR=$?
+case "$1" in
+	--ext)
+	_build_ext --test
+	ERROR=$?
+	;;
+	*)
+	_build --test
+	ERROR=$?
+	;;
+esac
 
 cd $SRC
 rm -v -rf $TG

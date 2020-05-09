@@ -21,6 +21,26 @@ function _build ()
 	return $ERR
 }
 
+function _build_ext ()
+{
+	local ERR=0
+    patch -Np1 -i ../bash-5.0-upstream_fixes-1.patch
+    ./configure --prefix=/usr                    \
+                --docdir=/usr/share/doc/bash-5.0 \
+                --without-bash-malloc            \
+                --with-installed-readline
+    make
+ 	if [ "$1" == "--test" ]; then
+	    chown -Rv nobody .
+    	su nobody -s /bin/bash -c "PATH=$PATH HOME=/home make tests"
+		ERR=$?
+		[ $ERR -ne 0 ] && echo "[ERROR]: test failed"
+	fi
+	make install
+	mv -vf /usr/bin/bash /bin
+	return $ERR
+}
+
 source ../common/config.sh
 source ../common/utils.sh
 #----------------------------------------
@@ -32,8 +52,16 @@ cd $SRC
 TG=$( extract $COMP )
 cd $TG
 
-_build #--test #ignore for now
-ERROR=$?
+case "$1" in
+	--ext)
+	_build_ext --test
+	ERROR=$?
+	;;
+	*)
+	_build
+	ERROR=$?
+	;;
+esac
 
 cd $SRC
 rm -v -rf $TG

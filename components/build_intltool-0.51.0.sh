@@ -5,13 +5,16 @@ ERROR=0
 function _build () 
 {
 	local ERR=0
-	./configure --prefix=$TOOLS_SLINK
-	make
+    sed -i 's:\\\${:\\\$\\{:' intltool-update.in
+    ./configure --prefix=/usr
+    make
 	if [ "$1" == "--test" ]; then
 		make check
 		ERR=$?
+		[ $ERR -ne 0 ] && echo "[ERROR]: test failed"
 	fi
-	[ $ERR -eq 0 ] && make install || echo "[ERROR]: build failed"
+    make install
+    install -v -Dm644 doc/I18N-HOWTO /usr/share/doc/intltool-0.51.0/I18N-HOWTO
 	return $ERR
 }
 
@@ -26,7 +29,7 @@ cd $SRC
 TG=$( extract $COMP )
 cd $TG
 
-_build
+_build --test
 ERROR=$?
 
 cd $SRC

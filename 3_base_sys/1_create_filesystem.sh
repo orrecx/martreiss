@@ -17,8 +17,8 @@ function create_virtual_kernel_filesystem ()
     mkdir -pv /$(readlink /dev/shm)
   fi
 
-  if [ -d "${LFS}/tools/$(uname -m)-pc-linux-gnu" ]; then
-    cp -r ${LFS}/tools/$(uname -m)-pc-linux-gnu ${LFS}/tools/$(uname -m)-lfs-linux-gnu
+  if [ -d "/tools/$(uname -m)-pc-linux-gnu" ]; then
+    cp -v -r /tools/$(uname -m)-pc-linux-gnu /tools/$(uname -m)-lfs-linux-gnu
   fi
 }
 
@@ -54,6 +54,8 @@ function create_directory_structure ()
 
   ln -sv /proc/self/mounts /etc/mtab
   ln -sv /tools/sbin/{zic,ldconfig,csd,sln} /sbin
+
+  mkdir -vp /etc/ld.so.conf.d
 }
 
 function create_user_admin_files ()

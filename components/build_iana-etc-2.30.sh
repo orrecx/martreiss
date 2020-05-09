@@ -4,15 +4,8 @@ ERROR=0
 
 function _build () 
 {
-	local ERR=0
-	./configure --prefix=$TOOLS_SLINK
 	make
-	if [ "$1" == "--test" ]; then
-		make check
-		ERR=$?
-	fi
-	[ $ERR -eq 0 ] && make install || echo "[ERROR]: build failed"
-	return $ERR
+	make install
 }
 
 source ../common/config.sh
@@ -27,7 +20,6 @@ TG=$( extract $COMP )
 cd $TG
 
 _build
-ERROR=$?
 
 cd $SRC
 rm -v -rf $TG

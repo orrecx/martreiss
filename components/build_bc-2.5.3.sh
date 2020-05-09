@@ -5,10 +5,10 @@ ERROR=0
 function _build () 
 {
 	local ERR=0
-	./configure --prefix=$TOOLS_SLINK
+	PREFIX=/usr CC=gcc CFLAGS="-std=c99" ./configure.sh -G -O3
 	make
 	if [ "$1" == "--test" ]; then
-		make check
+		make test
 		ERR=$?
 	fi
 	[ $ERR -eq 0 ] && make install || echo "[ERROR]: build failed"

@@ -3,9 +3,9 @@ cd "$( dirname $(realpath $0))"
 
 function _help ()
 {
-    echo "USAGE: $( basename $0 ) command options"
+    echo "USAGE: $( basename $0 ) <command> <options>"
     echo "command: container | host "
-    echo "for command help: $( basename $0 ) command --help|-h "
+    echo "use $( basename $0 ) command --help|-h "
 }
 
 function _help_container ()

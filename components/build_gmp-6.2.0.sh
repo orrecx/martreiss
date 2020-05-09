@@ -5,13 +5,27 @@ ERROR=0
 function _build () 
 {
 	local ERR=0
-	./configure --prefix=$TOOLS_SLINK
+	ABI=32 ./configure ...
+	cp -v configfsf.guess config.guess
+	cp -v configfsf.sub   config.sub
+
+	./configure --prefix=/usr    \
+            --enable-cxx     \
+            --disable-static \
+            --docdir=/usr/share/doc/gmp-6.2.0
 	make
+	make html
+				
 	if [ "$1" == "--test" ]; then
-		make check
+		make check 2>&1 | tee gmp-check-log
 		ERR=$?
+		awk '/# PASS:/{total+=$3} ; END{print total}' gmp-check-log		
 	fi
-	[ $ERR -eq 0 ] && make install || echo "[ERROR]: build failed"
+
+	[ $ERR -ne 0 ] && echo "[ERROR]: test failed"
+	make install
+	make install-html
+
 	return $ERR
 }
 
@@ -26,7 +40,7 @@ cd $SRC
 TG=$( extract $COMP )
 cd $TG
 
-_build
+_build --test
 ERROR=$?
 
 cd $SRC

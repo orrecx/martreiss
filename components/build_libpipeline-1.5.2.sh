@@ -5,13 +5,14 @@ ERROR=0
 function _build () 
 {
 	local ERR=0
-	./configure --prefix=$TOOLS_SLINK
+	./configure --prefix=/usr
 	make
-	if [ "$1" == "--test" ]; then
+ 	if [ "$1" == "--test" ]; then
 		make check
 		ERR=$?
+		[ $ERR -ne 0 ] && echo "[ERROR]: test failed"
 	fi
-	[ $ERR -eq 0 ] && make install || echo "[ERROR]: build failed"
+	make install
 	return $ERR
 }
 

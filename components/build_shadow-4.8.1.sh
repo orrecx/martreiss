@@ -4,15 +4,20 @@ ERROR=0
 
 function _build () 
 {
-	local ERR=0
-	./configure --prefix=$TOOLS_SLINK
-	make
-	if [ "$1" == "--test" ]; then
-		make check
-		ERR=$?
-	fi
-	[ $ERR -eq 0 ] && make install || echo "[ERROR]: build failed"
-	return $ERR
+    sed -i 's/groups$(EXEEXT) //' src/Makefile.in
+    find man -name Makefile.in -exec sed -i 's/groups\.1 / /'   {} \;
+    find man -name Makefile.in -exec sed -i 's/getspnam\.3 / /' {} \;
+    find man -name Makefile.in -exec sed -i 's/passwd\.5 / /'   {} \;
+
+    sed -i -e 's@#ENCRYPT_METHOD DES@ENCRYPT_METHOD SHA512@' \
+           -e 's@/var/spool/mail@/var/mail@' etc/login.defs
+    sed -i 's/1000/999/' etc/useradd
+    ./configure --sysconfdir=/etc --with-group-name-max-length=32
+    make
+    make install
+    pwconv
+    grpconv
+    ( echo edge; echo edge ) | passwd root
 }
 
 source ../common/config.sh
@@ -27,7 +32,6 @@ TG=$( extract $COMP )
 cd $TG
 
 _build
-ERROR=$?
 
 cd $SRC
 rm -v -rf $TG

@@ -4,15 +4,16 @@ ERROR=0
 
 function _build () 
 {
-	local ERR=0
-	./configure --prefix=$TOOLS_SLINK
-	make
-	if [ "$1" == "--test" ]; then
-		make check
-		ERR=$?
-	fi
-	[ $ERR -eq 0 ] && make install || echo "[ERROR]: build failed"
-	return $ERR
+    ./config --prefix=/usr         \
+             --openssldir=/etc/ssl \
+             --libdir=lib          \
+             shared                \
+             zlib-dynamic
+
+    sed -i '/INSTALL_LIBS/s/libcrypto.a libssl.a//' Makefile
+    make MANSUFFIX=ssl install
+    mv -v /usr/share/doc/openssl /usr/share/doc/openssl-1.1.1d
+    cp -vfr doc/* /usr/share/doc/openssl-1.1.1d
 }
 
 source ../common/config.sh
@@ -27,7 +28,6 @@ TG=$( extract $COMP )
 cd $TG
 
 _build
-ERROR=$?
 
 cd $SRC
 rm -v -rf $TG

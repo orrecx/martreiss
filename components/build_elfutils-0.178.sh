@@ -5,13 +5,16 @@ ERROR=0
 function _build () 
 {
 	local ERR=0
-	./configure --prefix=$TOOLS_SLINK
-	make
+    ./configure --prefix=/usr --disable-debuginfod
+    make
 	if [ "$1" == "--test" ]; then
 		make check
 		ERR=$?
+		[ $ERR -ne 0 ] && echo "[ERROR]: test failed"
 	fi
-	[ $ERR -eq 0 ] && make install || echo "[ERROR]: build failed"
+    make -C libelf install
+    install -vm644 config/libelf.pc /usr/lib/pkgconfig
+    rm /usr/lib/libelf.a
 	return $ERR
 }
 
@@ -26,7 +29,7 @@ cd $SRC
 TG=$( extract $COMP )
 cd $TG
 
-_build
+_build --test
 ERROR=$?
 
 cd $SRC

@@ -72,7 +72,7 @@ function _build_Libstdcxx ()
     return 0
 }
 
-function _build_ext ()
+function _build_round2 ()
 {
     local ERR=0
     cat gcc/limitx.h gcc/glimits.h gcc/limity.h > \
@@ -140,6 +140,74 @@ function _build_ext ()
 	return $ERR
 }
 
+function _build_ext ()
+{
+  case $(uname -m) in
+    x86_64)
+      sed -e '/m64=/s/lib64/lib/' \
+          -i.orig gcc/config/i386/t-linux64
+      ;;
+  esac
+  sed -e '1161 s|^|//|' \
+      -i libsanitizer/sanitizer_common/sanitizer_platform_limits_posix.cc
+
+  mkdir -v build
+  cd       build
+
+  SED=sed                               \
+  ../configure --prefix=/usr            \
+               --enable-languages=c,c++ \
+               --disable-multilib       \
+               --disable-bootstrap      \
+               --with-system-zlib
+
+  make
+  ulimit -s 32768
+
+  chown -Rv nobody . 
+  su nobody -s /bin/bash -c "PATH=$PATH make -k check"
+  ../contrib/test_summary
+
+  make install
+
+  rm -rf /usr/lib/gcc/$(gcc -dumpmachine)/9.2.0/include-fixed/bits/
+  chown -v -R root:root /usr/lib/gcc/*linux-gnu/9.2.0/include{,-fixed}
+  ln -sv ../usr/bin/cpp /lib
+  ln -sv gcc /usr/bin/cc
+  install -v -dm755 /usr/lib/bfd-plugins
+  ln -svf ../../libexec/gcc/$(gcc -dumpmachine)/9.2.0/liblto_plugin.so \
+          /usr/lib/bfd-plugins/
+  
+  echo 'int main(){}' > dummy.c
+  cc dummy.c -v -Wl,--verbose &> dummy.log
+  readelf -l a.out | grep ': /lib'
+  local ERR=$?
+  if [ $ERR -eq 0 ]; then
+      grep -o '/usr/lib.*/crt[1in].*succeeded' dummy.log
+      #expected result:
+      #/usr/lib/gcc/x86_64-pc-linux-gnu/9.2.0/../../../../lib/crt1.o succeeded
+      #/usr/lib/gcc/x86_64-pc-linux-gnu/9.2.0/../../../../lib/crti.o succeeded
+      #/usr/lib/gcc/x86_64-pc-linux-gnu/9.2.0/../../../../lib/crtn.o succeeded
+      grep 'SEARCH.*/usr/lib' dummy.log |sed 's|; |\n|g'
+      #expected result:
+      #SEARCH_DIR("/usr/x86_64-pc-linux-gnu/lib64")
+      #SEARCH_DIR("/usr/local/lib64")
+      #SEARCH_DIR("/lib64")
+      #SEARCH_DIR("/usr/lib64")
+      #SEARCH_DIR("/usr/x86_64-pc-linux-gnu/lib")
+      #SEARCH_DIR("/usr/local/lib")
+      #SEARCH_DIR("/lib")
+      #SEARCH_DIR("/usr/lib");                    
+  else
+      echo "[ERROR]: fail to build gcc."
+  fi
+
+  mkdir -pv /usr/share/gdb/auto-load/usr/lib
+  mv -v /usr/lib/*gdb.py /usr/share/gdb/auto-load/usr/lib
+
+  return $ERR
+}
+
 source ../common/config.sh
 source ../common/utils.sh
 #----------------------------------------
@@ -156,9 +224,12 @@ case "$1" in
     _build_Libstdcxx
     ;;
   --pass2)
-  _build_ext --test
+  _build_round2 --test
   ERROR=$?
   ;;
+  --ext)
+  _build_ext --test
+  ERROR=$?
   *)
   _build
   ERROR=$?

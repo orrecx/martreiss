@@ -11,7 +11,14 @@ function _build ()
 		make check
 		ERR=$?
 	fi
-	[ $ERR -eq 0 ] && make install || echo "[ERROR]: build failed"
+
+	if [ $ERR -eq 0 ]; then
+		make install
+		mv -v /usr/lib/libz.so.* /lib
+		ln -sfv ../../lib/$(readlink /usr/lib/libz.so) /usr/lib/libz.so
+	else
+		echo "[ERROR]: build failed"
+	fi
 	return $ERR
 }
 

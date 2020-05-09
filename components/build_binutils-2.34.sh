@@ -19,7 +19,7 @@ function _build ()
 	make install
 }
 
-_build_ext ()
+_build_round2 ()
 {
     mkdir -v build
     cd       build
@@ -41,6 +41,35 @@ _build_ext ()
     cp -v ld/ld-new /tools/bin
 }
 
+function _build_ext ()
+{
+  local ERR=0
+  local T=`expect -c "spawn ls"`
+  if [[ "$T" = *"spawn"* ]]; then
+      sed -i '/@\tincremental_copy/d' gold/testsuite/Makefile.in
+      mkdir -v build
+      cd       build
+      ../configure --prefix=/usr       \
+                   --enable-gold       \
+                   --enable-ld=default \
+                   --enable-plugins    \
+                   --enable-shared     \
+                   --disable-werror    \
+                   --enable-64-bit-bfd \
+                   --with-system-zlib
+      make tooldir=/usr
+      make -k check
+      ERR=$?
+      [ $ERR -ne 0 ] && echo "[ERROR]: make check failed"
+      make install             
+  else
+      echo "[ERROR]: expect -c spawn ls failed"
+      ERR=1
+  fi
+
+  return $ERR
+}
+
 source ../common/config.sh
 source ../common/utils.sh
 #----------------------------------------
@@ -54,7 +83,11 @@ cd $TG
 
 case "$1" in
   --pass2)
+    _build_round2
+    ;;
+  --ext)
     _build_ext
+    ERROR=$?
     ;;
   *)
   _build

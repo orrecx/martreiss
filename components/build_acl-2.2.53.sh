@@ -5,13 +5,21 @@ ERROR=0
 function _build () 
 {
 	local ERR=0
-	./configure --prefix=$TOOLS_SLINK
+    ./configure --prefix=/usr         \
+                --bindir=/bin         \
+                --disable-static      \
+                --libexecdir=/usr/lib \
+                --docdir=/usr/share/doc/acl-2.2.53
 	make
 	if [ "$1" == "--test" ]; then
 		make check
 		ERR=$?
+		[ $ERR -ne 0 ] && echo "[ERROR]: test failed"
 	fi
-	[ $ERR -eq 0 ] && make install || echo "[ERROR]: build failed"
+    make install
+    mv -v /usr/lib/libacl.so.* /lib
+    ln -sfv ../../lib/$(readlink /usr/lib/libacl.so) /usr/lib/libacl.so
+
 	return $ERR
 }
 

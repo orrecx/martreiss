@@ -15,6 +15,24 @@ function _build ()
 	return $ERR
 }
 
+function _build_ext ()
+{
+    local ERR=0
+    sed -i 's/extras//' Makefile.in
+
+    ./configure --prefix=/usr
+    make
+	if [ "$1" == "--test" ]; then
+		make check
+		ERR=$?
+		[ $ERR -ne 0 ] && echo "[ERROR]: test failed"
+	fi
+    make install
+    mkdir -v /usr/share/doc/gawk-5.0.1
+    cp    -v doc/{awkforai.txt,*.{eps,pdf,jpg}} /usr/share/doc/gawk-5.0.1
+    return $ERR
+}
+
 source ../common/config.sh
 source ../common/utils.sh
 #----------------------------------------
@@ -26,8 +44,16 @@ cd $SRC
 TG=$( extract $COMP )
 cd $TG
 
-_build
-ERROR=$?
+case "$1" in
+	--ext)
+	_build_ext --test
+    ERROR=$?
+	;;
+	*)
+	_build --test
+	ERROR=$?
+	;;
+esac
 
 cd $SRC
 rm -v -rf $TG

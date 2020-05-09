@@ -15,6 +15,13 @@ function _build ()
 	return $ERR
 }
 
+function _build_ext ()
+{
+    ./configure --prefix=/usr --docdir=/usr/share/doc/bison-3.5.2
+    make
+    make install
+}
+
 source ../common/config.sh
 source ../common/utils.sh
 #----------------------------------------
@@ -26,8 +33,15 @@ cd $SRC
 TG=$( extract $COMP )
 cd $TG
 
-_build
-ERROR=$?
+case "$1" in
+	--ext)
+	_build_ext
+	;;
+	*)
+	_build
+	ERROR=$?
+	;;
+esac
 
 cd $SRC
 rm -v -rf $TG

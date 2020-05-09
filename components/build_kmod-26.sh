@@ -4,15 +4,20 @@ ERROR=0
 
 function _build () 
 {
-	local ERR=0
-	./configure --prefix=$TOOLS_SLINK
-	make
-	if [ "$1" == "--test" ]; then
-		make check
-		ERR=$?
-	fi
-	[ $ERR -eq 0 ] && make install || echo "[ERROR]: build failed"
-	return $ERR
+    ./configure --prefix=/usr          \
+                --bindir=/bin          \
+                --sysconfdir=/etc      \
+                --with-rootlibdir=/lib \
+                --with-xz              \
+                --with-zlib
+    make
+    make install
+
+    for target in depmod insmod lsmod modinfo modprobe rmmod; do
+      ln -svf ../bin/kmod /sbin/$target
+    done
+
+    ln -svf kmod /bin/lsmod			
 }
 
 source ../common/config.sh
@@ -27,7 +32,6 @@ TG=$( extract $COMP )
 cd $TG
 
 _build
-ERROR=$?
 
 cd $SRC
 rm -v -rf $TG

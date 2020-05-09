@@ -4,15 +4,10 @@ ERROR=0
 
 function _build () 
 {
-	local ERR=0
-	./configure --prefix=$TOOLS_SLINK
-	make
-	if [ "$1" == "--test" ]; then
-		make check
-		ERR=$?
-	fi
-	[ $ERR -eq 0 ] && make install || echo "[ERROR]: build failed"
-	return $ERR
+    sed -i /ARPD/d Makefile
+    rm -fv man/man8/arpd.8
+    sed -i 's/.m_ipt.o//' tc/Makefile
+    make DOCDIR=/usr/share/doc/iproute2-5.5.0 install
 }
 
 source ../common/config.sh
@@ -27,7 +22,6 @@ TG=$( extract $COMP )
 cd $TG
 
 _build
-ERROR=$?
 
 cd $SRC
 rm -v -rf $TG

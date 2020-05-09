@@ -6,6 +6,10 @@ function _headers ()
 {
     make mrproper
    	make headers
+	if [ "$1" == "optimized" ]; then
+	    find usr/include -name '.*' -delete
+	    rm usr/include/Makefile
+	fi
    	cp -rv usr/include/* /tools/include
 }
 
@@ -28,6 +32,9 @@ cd $TG
 case "$1" in
 	--headers)
 	_headers
+	;;
+	--headers_optimized)
+	_headers "optimized"
 	;;
 	--kernel)
 	_build

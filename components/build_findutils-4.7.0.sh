@@ -15,6 +15,22 @@ function _build ()
 	return $ERR
 }
 
+function _build_ext ()
+{
+    local ERR=0
+    ./configure --prefix=/usr --localstatedir=/var/lib/locate
+    make
+	if [ "$1" == "--test" ]; then
+		make check
+		ERR=$?
+		[ $ERR -ne 0 ] && echo "[ERROR]: test failed"
+	fi
+    make install
+    mv -v /usr/bin/find /bin
+    sed -i 's|find:=${BINDIR}|find:=/bin|' /usr/bin/updatedb
+    return $ERR
+}
+
 source ../common/config.sh
 source ../common/utils.sh
 #----------------------------------------
@@ -26,8 +42,16 @@ cd $SRC
 TG=$( extract $COMP )
 cd $TG
 
-_build
-ERROR=$?
+case "$1" in
+	--ext)
+	_build_ext --test
+    ERROR=$?
+	;;
+	*)
+	_build --test
+	ERROR=$?
+	;;
+esac
 
 cd $SRC
 rm -v -rf $TG

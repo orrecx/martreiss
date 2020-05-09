@@ -4,15 +4,10 @@ ERROR=0
 
 function _build () 
 {
-	local ERR=0
-	./configure --prefix=$TOOLS_SLINK
-	make
-	if [ "$1" == "--test" ]; then
-		make check
-		ERR=$?
-	fi
-	[ $ERR -eq 0 ] && make install || echo "[ERROR]: build failed"
-	return $ERR
+    python3 configure.py --bootstrap
+    install -vm755 ninja /usr/bin/
+    install -vDm644 misc/bash-completion /usr/share/bash-completion/completions/ninja
+    install -vDm644 misc/zsh-completion  /usr/share/zsh/site-functions/_ninja
 }
 
 source ../common/config.sh
@@ -27,7 +22,6 @@ TG=$( extract $COMP )
 cd $TG
 
 _build
-ERROR=$?
 
 cd $SRC
 rm -v -rf $TG

@@ -5,13 +5,19 @@ ERROR=0
 function _build () 
 {
 	local ERR=0
-	./configure --prefix=$TOOLS_SLINK
-	make
-	if [ "$1" == "--test" ]; then
+    patch -Np1 -i ../kbd-2.2.0-backspace-1.patch
+    sed -i 's/\(RESIZECONS_PROGS=\)yes/\1no/g' configure
+    sed -i 's/resizecons.8 //' docs/man/man8/Makefile.in
+    PKG_CONFIG_PATH=/tools/lib/pkgconfig ./configure --prefix=/usr --disable-vlock
+    make
+ 	if [ "$1" == "--test" ]; then
 		make check
 		ERR=$?
+		[ $ERR -ne 0 ] && echo "[ERROR]: test failed"
 	fi
-	[ $ERR -eq 0 ] && make install || echo "[ERROR]: build failed"
+    make install
+    mkdir -v       /usr/share/doc/kbd-2.2.0
+    cp -R -v docs/doc/* /usr/share/doc/kbd-2.2.0
 	return $ERR
 }
 
@@ -26,7 +32,7 @@ cd $SRC
 TG=$( extract $COMP )
 cd $TG
 
-_build
+_build --test
 ERROR=$?
 
 cd $SRC

@@ -5,13 +5,15 @@ ERROR=0
 function _build () 
 {
 	local ERR=0
-	./configure --prefix=$TOOLS_SLINK
-	make
+    ./configure --prefix=/usr --docdir=/usr/share/doc/gperf-3.1
+    make
 	if [ "$1" == "--test" ]; then
-		make check
+		make -j1 check
 		ERR=$?
+		[ $ERR -ne 0 ] && echo "[ERROR]: test failed"
 	fi
-	[ $ERR -eq 0 ] && make install || echo "[ERROR]: build failed"
+	
+    make install
 	return $ERR
 }
 
@@ -26,7 +28,7 @@ cd $SRC
 TG=$( extract $COMP )
 cd $TG
 
-_build
+_build --test
 ERROR=$?
 
 cd $SRC
