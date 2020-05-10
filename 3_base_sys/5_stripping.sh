@@ -1,4 +1,9 @@
-source $WRK/vfs_scripts/utils.sh
+#!/bin/bash
+cd "$( dirname $(realpath $0))"
+
+source ../common/config.sh
+source ../common/utils.sh
+#------------------------ main ------------------------
 
 function stripp () 
 {
@@ -38,7 +43,7 @@ done
 
 unset LIB save_lib save_usrlib
 
-exec /bin/bash -c stripp
+exec /tools/bin/bash -c stripp
 
 s_end $0
 E=$?

@@ -82,8 +82,7 @@ fi
 if [ $DOCKER_CONTEXT -eq 1 ] ; then
     ./1_create_virtual_fs.sh
     ./2_install_config_files.sh
-    ./build_components.sh
-    
+    ./build_components.sh    
 fi
 
 s_end $0

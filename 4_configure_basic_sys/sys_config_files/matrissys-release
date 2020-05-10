@@ -1,0 +1,4 @@
+DISTRIB_ID="MATRISSYS"
+DISTRIB_RELEASE="1.0"
+DISTRIB_CODENAME="lfs-lab"
+DISTRIB_DESCRIPTION="MATRISSYS: Linux sys based on Linux From Scratch Tuto Version 9.1"

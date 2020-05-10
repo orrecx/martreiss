@@ -2,6 +2,12 @@
 cd "$( dirname $(realpath $0))"
 ERROR=0
 
+function _help ()
+{
+	echo "Automation of a build of a kernel required a preconfigured kernel config"
+	echo "you can generate one by using the config menu interface by calling 'make menuconfig'"
+}
+
 function _headers () 
 {
     make mrproper
@@ -15,7 +21,28 @@ function _headers ()
 
 function _build ()
 {
-	echo "Nothing to do for now"
+	local ERR=0
+    make mrproper
+	#make menuconfig
+    #ERR=$?
+    cp -v $1 .config
+    
+    if [ $ERR -eq 0 ]; then
+        make
+
+        make modules_install
+
+        #copy build artifacts to /boot 
+        cp -iv arch/x86/boot/bzImage /boot/vmlinuz-5.5.3-lfs-9.1
+        cp -iv System.map /boot/System.map-5.5.3
+        cp -iv .config /boot/config-5.5.3
+
+        install -d /usr/share/doc/linux-5.5.3
+        cp -r Documentation/* /usr/share/doc/linux-5.5.3
+    else
+        echo "[ERROR]: make menuconfig failed"
+    fi
+	return $ERR
 }
 
 source ../common/config.sh
@@ -37,7 +64,15 @@ case "$1" in
 	_headers "optimized"
 	;;
 	--kernel)
-	_build
+	shift
+	if [ "$1" == "--config" ]; then
+		shift
+		CONF="$1"
+		[ -n $CONF ] && [ ! -e "$CONF" ] && _build $CONF || _help && ERROR=1
+	else
+		_help
+		ERROR=2
+	fi
 	;;
 	*)
 	echo "[ERROR]: unknown argument"
