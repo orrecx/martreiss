@@ -8,7 +8,7 @@ function create_fstab ()
 
 function _install_grub ()
 {
-    grub-install /dev/sdb
+    #grub-install /dev/sdb
     cp -v sys_config_files/grub.cfg /boot/grub/grub.cfg
 }
 
