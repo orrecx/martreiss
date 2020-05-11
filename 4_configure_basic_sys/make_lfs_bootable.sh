@@ -3,14 +3,13 @@ cd "$( dirname $(realpath $0))"
 
 function create_fstab ()
 {
-    mkdir -pv /ublab
     cp -v sys_config_files/fstab /etc/fstab
 }
 
-function grub_and_boot_process ()
+function _install_grub ()
 {
     grub-install /dev/sdb
-    cp -v sys_config_files/fstab /boot/grub/grub.cfg
+    cp -v sys_config_files/grub.cfg /boot/grub/grub.cfg
 }
 
 #---------------------------------------------
@@ -18,7 +17,7 @@ s_start $0
 S=$?
 
 run_cmd create_fstab
-run_cmd grub_and_boot_process
+run_cmd _install_grub
 
 s_end $0
 E=$?
