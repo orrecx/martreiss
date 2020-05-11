@@ -17,4 +17,6 @@ LC_ALL=POSIX
 PATH="$PATH:/tools/$(uname -m)-pc-linux-gnu/bin"
 export LC_ALL PATH
 
-../3_base_sys/main.sh --docker
+../3_base_sys/main.sh
+
+../4_configure_basic_sys/main.sh

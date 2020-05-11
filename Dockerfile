@@ -21,11 +21,12 @@ COPY --from=tmp_sys ${LFS}/tools /tools
 COPY --from=tmp_sys ${LFS}/sources /sources
 COPY --from=tmp_sys ${LFS}/tools/bin/bash /bin/sh
 COPY --from=tmp_sys ${LFS}/tools/bin/bash /bin/bash
-
+RUN mkdir -pv ${LFS}/results
 ENV PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/tools/bin" WRK="/workspace" LFS=""
 
-RUN mkdir -pv /lfs/results ${WRK}/build_in_container 
+RUN mkdir -pv ${WRK}/build_in_container 
 COPY 3_base_sys ${WRK}/3_base_sys
+COPY 4_configure_basic_sys ${WRK}/4_configure_basic_sys
 COPY common ${WRK}/common
 COPY build_in_container/2_build_basic_sys.sh ${WRK}/build_in_container/2_build_basic_sys.sh
 WORKDIR ${WRK}
